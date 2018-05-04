@@ -29,6 +29,12 @@ after the seconds data transfer, provided the oscillator is \
 already running.";
 
 
+
+uint8_t big_array[];
+
+
+
+
 volatile static int debug_var;
 /* ------------------------------------------------------------------------- */
 uint8_t temp;
@@ -40,6 +46,28 @@ uint8_t rx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
 /* ------------------------------------------------------------------------- */
 int main()
 {
+
+	uint8_t i;
+	for (i =0; i< 30; i++){
+		big_array[i] = 'A';
+	}
+
+	for (i =30; i< 60; i++){
+		big_array[i] = 'B';
+	}
+
+	for (i =60; i< 90; i++){
+			big_array[i] = 'C';
+		}
+
+
+	for (i =90; i< 120; i++){
+			big_array[i] = 'D';
+		}
+
+	for (i =120; i< 140; i++){
+			big_array[i] = 'E';
+		}
 
 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -56,7 +84,7 @@ int main()
 	PORT.GPIO_Speed = GPIO_Speed_2MHz;
 	PORT.GPIO_Pin = GPIO_Pin_11;
 	GPIO_Init(GPIOB, &PORT);
-	GPIOC->ODR |= GPIO_Pin_13;
+
 
 	nrf24_init();
 	nRF24_restore_defaults();
@@ -85,7 +113,7 @@ int main()
 			/* Automatically goes to TX mode */
 		//	478888888888888888nrf24_send(data_array_tx);
 
-			l3_send_packet(100, big_array, 150);
+			l3_send_packet(100, big_array, 140);
 
 //			data_array_tx[0]++;
 //

@@ -29,10 +29,12 @@
 
 
 
-#define L3_HEAD_SIZE 	2
-#define L3_DATA_SIZE 	30
-#define L3_PACKET_SIZE 	32
 
+#define FRAME_SIZE 		32
+#define L2_HEAD_SIZE 	2
+#define L2_DATA_SIZE 	(FRAME_SIZE - L2_HEAD_SIZE)
+#define H_FRM           0
+#define H_TOTAL         1
 
 /* adjustment functions */
 void    nrf24_init();
