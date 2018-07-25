@@ -1,7 +1,1 @@
-main.c:150:5:BMP280_SPI_bus_read	88	static
-main.c:191:5:BMP280_SPI_bus_write	168	static
-main.c:224:7:BMP280_delay_msek	16	static
-main.c:232:4:SPI_routine	4	static
-main.c:249:13:bmp280_compensate_T_int32	32	static
-main.c:263:9:compensate_temperature	64	static
-main.c:293:1:main	32	static
+main.c:24:6:main	16	static
