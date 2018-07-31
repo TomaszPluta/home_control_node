@@ -1534,9 +1534,6 @@ Discarded input sections
  .debug_frame   0x0000000000000000      0x12c Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_wwdg.o
  .ARM.attributes
                 0x0000000000000000       0x33 Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_wwdg.o
- .text          0x0000000000000000        0x0 src/ThreadLightSensor.o
- .data          0x0000000000000000        0x0 src/ThreadLightSensor.o
- .bss           0x0000000000000000        0x0 src/ThreadLightSensor.o
  .text          0x0000000000000000        0x0 src/drivers/bme280.o
  .data          0x0000000000000000        0x0 src/drivers/bme280.o
  .bss           0x0000000000000000        0x0 src/drivers/bme280.o
@@ -1824,6 +1821,41 @@ Discarded input sections
                 0x0000000000000000       0x10 src/system_stm32f10x.o
  .text.SystemCoreClockUpdate
                 0x0000000000000000       0xd8 src/system_stm32f10x.o
+ .text          0x0000000000000000        0x0 threads/src/ThreadCommunication.o
+ .data          0x0000000000000000        0x0 threads/src/ThreadCommunication.o
+ .bss           0x0000000000000000        0x0 threads/src/ThreadCommunication.o
+ .text.ThreadCommunication
+                0x0000000000000000       0x12 threads/src/ThreadCommunication.o
+ .debug_info    0x0000000000000000       0xb3 threads/src/ThreadCommunication.o
+ .debug_abbrev  0x0000000000000000       0x77 threads/src/ThreadCommunication.o
+ .debug_aranges
+                0x0000000000000000       0x20 threads/src/ThreadCommunication.o
+ .debug_ranges  0x0000000000000000       0x10 threads/src/ThreadCommunication.o
+ .debug_line    0x0000000000000000       0x5e threads/src/ThreadCommunication.o
+ .debug_str     0x0000000000000000      0x1c7 threads/src/ThreadCommunication.o
+ .comment       0x0000000000000000       0x7d threads/src/ThreadCommunication.o
+ .debug_frame   0x0000000000000000       0x30 threads/src/ThreadCommunication.o
+ .ARM.attributes
+                0x0000000000000000       0x33 threads/src/ThreadCommunication.o
+ .text          0x0000000000000000        0x0 threads/src/ThreadHealthMonitor.o
+ .data          0x0000000000000000        0x0 threads/src/ThreadHealthMonitor.o
+ .bss           0x0000000000000000        0x0 threads/src/ThreadHealthMonitor.o
+ .text.ThreadHealthMonitor
+                0x0000000000000000       0x12 threads/src/ThreadHealthMonitor.o
+ .debug_info    0x0000000000000000       0xb3 threads/src/ThreadHealthMonitor.o
+ .debug_abbrev  0x0000000000000000       0x77 threads/src/ThreadHealthMonitor.o
+ .debug_aranges
+                0x0000000000000000       0x20 threads/src/ThreadHealthMonitor.o
+ .debug_ranges  0x0000000000000000       0x10 threads/src/ThreadHealthMonitor.o
+ .debug_line    0x0000000000000000       0x5e threads/src/ThreadHealthMonitor.o
+ .debug_str     0x0000000000000000      0x1c7 threads/src/ThreadHealthMonitor.o
+ .comment       0x0000000000000000       0x7d threads/src/ThreadHealthMonitor.o
+ .debug_frame   0x0000000000000000       0x30 threads/src/ThreadHealthMonitor.o
+ .ARM.attributes
+                0x0000000000000000       0x33 threads/src/ThreadHealthMonitor.o
+ .text          0x0000000000000000        0x0 threads/src/ThreadLightSensor.o
+ .data          0x0000000000000000        0x0 threads/src/ThreadLightSensor.o
+ .bss           0x0000000000000000        0x0 threads/src/ThreadLightSensor.o
  .text          0x0000000000000000        0x0 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
  .data          0x0000000000000000        0x0 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
  .bss           0x0000000000000000        0x0 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
@@ -1963,7 +1995,6 @@ LOAD Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_spi.o
 LOAD Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.o
 LOAD Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.o
 LOAD Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_wwdg.o
-LOAD src/ThreadLightSensor.o
 LOAD src/drivers/bme280.o
 LOAD src/drivers/bmp280.o
 LOAD src/drivers/bmp280_hal.o
@@ -1973,6 +2004,9 @@ LOAD src/main.o
 LOAD src/startup_stm32f10x_md.o
 LOAD src/stm32f1xx_it.o
 LOAD src/system_stm32f10x.o
+LOAD threads/src/ThreadCommunication.o
+LOAD threads/src/ThreadHealthMonitor.o
+LOAD threads/src/ThreadLightSensor.o
                 0x0000000000000080                malloc_getpagesize_P = 0x80
 START GROUP
 LOAD /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a
@@ -2099,87 +2133,87 @@ LOAD /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-
                 0x0000000008000c70       0x48 FreeRTOS/source/tasks.o
  .text.prvAddCurrentTaskToDelayedList
                 0x0000000008000cb8       0xcc FreeRTOS/source/tasks.o
- .text.ThreadLightSensor
-                0x0000000008000d84       0x12 src/ThreadLightSensor.o
-                0x0000000008000d84                ThreadLightSensor
- *fill*         0x0000000008000d96        0x2 
- .text.main     0x0000000008000d98       0x28 src/main.o
-                0x0000000008000d98                main
+ .text.main     0x0000000008000d84       0x28 src/main.o
+                0x0000000008000d84                main
  .text.Reset_Handler
-                0x0000000008000dc0       0x50 src/startup_stm32f10x_md.o
-                0x0000000008000dc0                Reset_Handler
+                0x0000000008000dac       0x50 src/startup_stm32f10x_md.o
+                0x0000000008000dac                Reset_Handler
  .text.Default_Handler
-                0x0000000008000e10        0x2 src/startup_stm32f10x_md.o
-                0x0000000008000e10                EXTI2_IRQHandler
-                0x0000000008000e10                TIM1_CC_IRQHandler
-                0x0000000008000e10                PVD_IRQHandler
-                0x0000000008000e10                EXTI3_IRQHandler
-                0x0000000008000e10                EXTI0_IRQHandler
-                0x0000000008000e10                I2C2_EV_IRQHandler
-                0x0000000008000e10                ADC1_2_IRQHandler
-                0x0000000008000e10                SPI1_IRQHandler
-                0x0000000008000e10                TAMPER_IRQHandler
-                0x0000000008000e10                DMA1_Channel4_IRQHandler
-                0x0000000008000e10                USART3_IRQHandler
-                0x0000000008000e10                RTC_IRQHandler
-                0x0000000008000e10                DMA1_Channel7_IRQHandler
-                0x0000000008000e10                CAN1_RX1_IRQHandler
-                0x0000000008000e10                TIM4_IRQHandler
-                0x0000000008000e10                I2C1_EV_IRQHandler
-                0x0000000008000e10                DMA1_Channel6_IRQHandler
-                0x0000000008000e10                TIM3_IRQHandler
-                0x0000000008000e10                RCC_IRQHandler
-                0x0000000008000e10                TIM1_TRG_COM_IRQHandler
-                0x0000000008000e10                DMA1_Channel1_IRQHandler
-                0x0000000008000e10                Default_Handler
-                0x0000000008000e10                EXTI15_10_IRQHandler
-                0x0000000008000e10                EXTI9_5_IRQHandler
-                0x0000000008000e10                SPI2_IRQHandler
-                0x0000000008000e10                DMA1_Channel5_IRQHandler
-                0x0000000008000e10                EXTI4_IRQHandler
-                0x0000000008000e10                USB_LP_CAN1_RX0_IRQHandler
-                0x0000000008000e10                USB_HP_CAN1_TX_IRQHandler
-                0x0000000008000e10                DMA1_Channel3_IRQHandler
-                0x0000000008000e10                TIM1_UP_IRQHandler
-                0x0000000008000e10                WWDG_IRQHandler
-                0x0000000008000e10                TIM2_IRQHandler
-                0x0000000008000e10                TIM1_BRK_IRQHandler
-                0x0000000008000e10                EXTI1_IRQHandler
-                0x0000000008000e10                RTCAlarm_IRQHandler
-                0x0000000008000e10                USART2_IRQHandler
-                0x0000000008000e10                I2C2_ER_IRQHandler
-                0x0000000008000e10                DMA1_Channel2_IRQHandler
-                0x0000000008000e10                CAN1_SCE_IRQHandler
-                0x0000000008000e10                FLASH_IRQHandler
-                0x0000000008000e10                USART1_IRQHandler
-                0x0000000008000e10                I2C1_ER_IRQHandler
-                0x0000000008000e10                USBWakeUp_IRQHandler
+                0x0000000008000dfc        0x2 src/startup_stm32f10x_md.o
+                0x0000000008000dfc                EXTI2_IRQHandler
+                0x0000000008000dfc                TIM1_CC_IRQHandler
+                0x0000000008000dfc                PVD_IRQHandler
+                0x0000000008000dfc                EXTI3_IRQHandler
+                0x0000000008000dfc                EXTI0_IRQHandler
+                0x0000000008000dfc                I2C2_EV_IRQHandler
+                0x0000000008000dfc                ADC1_2_IRQHandler
+                0x0000000008000dfc                SPI1_IRQHandler
+                0x0000000008000dfc                TAMPER_IRQHandler
+                0x0000000008000dfc                DMA1_Channel4_IRQHandler
+                0x0000000008000dfc                USART3_IRQHandler
+                0x0000000008000dfc                RTC_IRQHandler
+                0x0000000008000dfc                DMA1_Channel7_IRQHandler
+                0x0000000008000dfc                CAN1_RX1_IRQHandler
+                0x0000000008000dfc                TIM4_IRQHandler
+                0x0000000008000dfc                I2C1_EV_IRQHandler
+                0x0000000008000dfc                DMA1_Channel6_IRQHandler
+                0x0000000008000dfc                TIM3_IRQHandler
+                0x0000000008000dfc                RCC_IRQHandler
+                0x0000000008000dfc                TIM1_TRG_COM_IRQHandler
+                0x0000000008000dfc                DMA1_Channel1_IRQHandler
+                0x0000000008000dfc                Default_Handler
+                0x0000000008000dfc                EXTI15_10_IRQHandler
+                0x0000000008000dfc                EXTI9_5_IRQHandler
+                0x0000000008000dfc                SPI2_IRQHandler
+                0x0000000008000dfc                DMA1_Channel5_IRQHandler
+                0x0000000008000dfc                EXTI4_IRQHandler
+                0x0000000008000dfc                USB_LP_CAN1_RX0_IRQHandler
+                0x0000000008000dfc                USB_HP_CAN1_TX_IRQHandler
+                0x0000000008000dfc                DMA1_Channel3_IRQHandler
+                0x0000000008000dfc                TIM1_UP_IRQHandler
+                0x0000000008000dfc                WWDG_IRQHandler
+                0x0000000008000dfc                TIM2_IRQHandler
+                0x0000000008000dfc                TIM1_BRK_IRQHandler
+                0x0000000008000dfc                EXTI1_IRQHandler
+                0x0000000008000dfc                RTCAlarm_IRQHandler
+                0x0000000008000dfc                USART2_IRQHandler
+                0x0000000008000dfc                I2C2_ER_IRQHandler
+                0x0000000008000dfc                DMA1_Channel2_IRQHandler
+                0x0000000008000dfc                CAN1_SCE_IRQHandler
+                0x0000000008000dfc                FLASH_IRQHandler
+                0x0000000008000dfc                USART1_IRQHandler
+                0x0000000008000dfc                I2C1_ER_IRQHandler
+                0x0000000008000dfc                USBWakeUp_IRQHandler
  .text.NMI_Handler
-                0x0000000008000e12        0xc src/stm32f1xx_it.o
-                0x0000000008000e12                NMI_Handler
+                0x0000000008000dfe        0xc src/stm32f1xx_it.o
+                0x0000000008000dfe                NMI_Handler
  .text.HardFault_Handler
-                0x0000000008000e1e        0x6 src/stm32f1xx_it.o
-                0x0000000008000e1e                HardFault_Handler
+                0x0000000008000e0a        0x6 src/stm32f1xx_it.o
+                0x0000000008000e0a                HardFault_Handler
  .text.MemManage_Handler
-                0x0000000008000e24        0x6 src/stm32f1xx_it.o
-                0x0000000008000e24                MemManage_Handler
+                0x0000000008000e10        0x6 src/stm32f1xx_it.o
+                0x0000000008000e10                MemManage_Handler
  .text.BusFault_Handler
-                0x0000000008000e2a        0x6 src/stm32f1xx_it.o
-                0x0000000008000e2a                BusFault_Handler
+                0x0000000008000e16        0x6 src/stm32f1xx_it.o
+                0x0000000008000e16                BusFault_Handler
  .text.UsageFault_Handler
-                0x0000000008000e30        0x6 src/stm32f1xx_it.o
-                0x0000000008000e30                UsageFault_Handler
+                0x0000000008000e1c        0x6 src/stm32f1xx_it.o
+                0x0000000008000e1c                UsageFault_Handler
  .text.DebugMon_Handler
-                0x0000000008000e36        0xc src/stm32f1xx_it.o
-                0x0000000008000e36                DebugMon_Handler
- *fill*         0x0000000008000e42        0x2 
+                0x0000000008000e22        0xc src/stm32f1xx_it.o
+                0x0000000008000e22                DebugMon_Handler
+ *fill*         0x0000000008000e2e        0x2 
  .text.SystemInit
-                0x0000000008000e44       0x68 src/system_stm32f10x.o
-                0x0000000008000e44                SystemInit
+                0x0000000008000e30       0x68 src/system_stm32f10x.o
+                0x0000000008000e30                SystemInit
  .text.SetSysClock
-                0x0000000008000eac        0xc src/system_stm32f10x.o
+                0x0000000008000e98        0xc src/system_stm32f10x.o
  .text.SetSysClockTo72
-                0x0000000008000eb8      0x100 src/system_stm32f10x.o
+                0x0000000008000ea4      0x100 src/system_stm32f10x.o
+ .text.ThreadLightSensor
+                0x0000000008000fa4       0x12 threads/src/ThreadLightSensor.o
+                0x0000000008000fa4                ThreadLightSensor
+ *fill*         0x0000000008000fb6        0x2 
  .text.__libc_init_array
                 0x0000000008000fb8       0x48 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
                 0x0000000008000fb8                __libc_init_array
@@ -2391,15 +2425,15 @@ LOAD /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-
  .ARM.attributes
                 0x00000000000000e3       0x33 FreeRTOS/source/tasks.o
  .ARM.attributes
-                0x0000000000000116       0x33 src/ThreadLightSensor.o
+                0x0000000000000116       0x33 src/main.o
  .ARM.attributes
-                0x0000000000000149       0x33 src/main.o
+                0x0000000000000149       0x21 src/startup_stm32f10x_md.o
  .ARM.attributes
-                0x000000000000017c       0x21 src/startup_stm32f10x_md.o
+                0x000000000000016a       0x33 src/stm32f1xx_it.o
  .ARM.attributes
-                0x000000000000019d       0x33 src/stm32f1xx_it.o
+                0x000000000000019d       0x33 src/system_stm32f10x.o
  .ARM.attributes
-                0x00000000000001d0       0x33 src/system_stm32f10x.o
+                0x00000000000001d0       0x33 threads/src/ThreadLightSensor.o
  .ARM.attributes
                 0x0000000000000203       0x2d /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
  .ARM.attributes
@@ -2429,22 +2463,22 @@ OUTPUT(home_control_node.elf elf32-littlearm)
  .debug_info    0x00000000000008f7      0xab8 FreeRTOS/source/list.o
  .debug_info    0x00000000000013af      0x2d2 FreeRTOS/source/port.o
  .debug_info    0x0000000000001681     0x203d FreeRTOS/source/tasks.o
- .debug_info    0x00000000000036be       0xb3 src/ThreadLightSensor.o
- .debug_info    0x0000000000003771      0x8d3 src/main.o
- .debug_info    0x0000000000004044       0x7b src/startup_stm32f10x_md.o
- .debug_info    0x00000000000040bf      0x121 src/stm32f1xx_it.o
- .debug_info    0x00000000000041e0      0x4a7 src/system_stm32f10x.o
+ .debug_info    0x00000000000036be      0x8d3 src/main.o
+ .debug_info    0x0000000000003f91       0x7b src/startup_stm32f10x_md.o
+ .debug_info    0x000000000000400c      0x121 src/stm32f1xx_it.o
+ .debug_info    0x000000000000412d      0x4a7 src/system_stm32f10x.o
+ .debug_info    0x00000000000045d4       0xb3 threads/src/ThreadLightSensor.o
 
 .debug_abbrev   0x0000000000000000      0xc9c
  .debug_abbrev  0x0000000000000000      0x1ba FreeRTOS/source/heap_3.o
  .debug_abbrev  0x00000000000001ba      0x1c5 FreeRTOS/source/list.o
  .debug_abbrev  0x000000000000037f      0x1c1 FreeRTOS/source/port.o
  .debug_abbrev  0x0000000000000540      0x36b FreeRTOS/source/tasks.o
- .debug_abbrev  0x00000000000008ab       0x77 src/ThreadLightSensor.o
- .debug_abbrev  0x0000000000000922      0x182 src/main.o
- .debug_abbrev  0x0000000000000aa4       0x12 src/startup_stm32f10x_md.o
- .debug_abbrev  0x0000000000000ab6       0x78 src/stm32f1xx_it.o
- .debug_abbrev  0x0000000000000b2e      0x16e src/system_stm32f10x.o
+ .debug_abbrev  0x00000000000008ab      0x182 src/main.o
+ .debug_abbrev  0x0000000000000a2d       0x12 src/startup_stm32f10x_md.o
+ .debug_abbrev  0x0000000000000a3f       0x78 src/stm32f1xx_it.o
+ .debug_abbrev  0x0000000000000ab7      0x16e src/system_stm32f10x.o
+ .debug_abbrev  0x0000000000000c25       0x77 threads/src/ThreadLightSensor.o
 
 .debug_aranges  0x0000000000000000      0x388
  .debug_aranges
@@ -2456,39 +2490,39 @@ OUTPUT(home_control_node.elf elf32-littlearm)
  .debug_aranges
                 0x00000000000000d8      0x1c8 FreeRTOS/source/tasks.o
  .debug_aranges
-                0x00000000000002a0       0x20 src/ThreadLightSensor.o
+                0x00000000000002a0       0x20 src/main.o
  .debug_aranges
-                0x00000000000002c0       0x20 src/main.o
+                0x00000000000002c0       0x28 src/startup_stm32f10x_md.o
  .debug_aranges
-                0x00000000000002e0       0x28 src/startup_stm32f10x_md.o
+                0x00000000000002e8       0x48 src/stm32f1xx_it.o
  .debug_aranges
-                0x0000000000000308       0x48 src/stm32f1xx_it.o
+                0x0000000000000330       0x38 src/system_stm32f10x.o
  .debug_aranges
-                0x0000000000000350       0x38 src/system_stm32f10x.o
+                0x0000000000000368       0x20 threads/src/ThreadLightSensor.o
 
 .debug_ranges   0x0000000000000000      0x300
  .debug_ranges  0x0000000000000000       0x18 FreeRTOS/source/heap_3.o
  .debug_ranges  0x0000000000000018       0x30 FreeRTOS/source/list.o
  .debug_ranges  0x0000000000000048       0x60 FreeRTOS/source/port.o
  .debug_ranges  0x00000000000000a8      0x1b8 FreeRTOS/source/tasks.o
- .debug_ranges  0x0000000000000260       0x10 src/ThreadLightSensor.o
- .debug_ranges  0x0000000000000270       0x10 src/main.o
- .debug_ranges  0x0000000000000280       0x20 src/startup_stm32f10x_md.o
- .debug_ranges  0x00000000000002a0       0x38 src/stm32f1xx_it.o
- .debug_ranges  0x00000000000002d8       0x28 src/system_stm32f10x.o
+ .debug_ranges  0x0000000000000260       0x10 src/main.o
+ .debug_ranges  0x0000000000000270       0x20 src/startup_stm32f10x_md.o
+ .debug_ranges  0x0000000000000290       0x38 src/stm32f1xx_it.o
+ .debug_ranges  0x00000000000002c8       0x28 src/system_stm32f10x.o
+ .debug_ranges  0x00000000000002f0       0x10 threads/src/ThreadLightSensor.o
 
-.debug_line     0x0000000000000000     0x1933
+.debug_line     0x0000000000000000     0x193b
  .debug_line    0x0000000000000000      0x1a6 FreeRTOS/source/heap_3.o
  .debug_line    0x00000000000001a6      0x2d4 FreeRTOS/source/list.o
  .debug_line    0x000000000000047a      0x283 FreeRTOS/source/port.o
  .debug_line    0x00000000000006fd      0xb6c FreeRTOS/source/tasks.o
- .debug_line    0x0000000000001269       0x54 src/ThreadLightSensor.o
- .debug_line    0x00000000000012bd      0x1df src/main.o
- .debug_line    0x000000000000149c       0x7c src/startup_stm32f10x_md.o
- .debug_line    0x0000000000001518      0x1e7 src/stm32f1xx_it.o
- .debug_line    0x00000000000016ff      0x234 src/system_stm32f10x.o
+ .debug_line    0x0000000000001269      0x1df src/main.o
+ .debug_line    0x0000000000001448       0x7c src/startup_stm32f10x_md.o
+ .debug_line    0x00000000000014c4      0x1e7 src/stm32f1xx_it.o
+ .debug_line    0x00000000000016ab      0x234 src/system_stm32f10x.o
+ .debug_line    0x00000000000018df       0x5c threads/src/ThreadLightSensor.o
 
-.debug_str      0x0000000000000000     0x16a7
+.debug_str      0x0000000000000000     0x16af
  .debug_str     0x0000000000000000      0x57f FreeRTOS/source/heap_3.o
                                         0x5f0 (size before relaxing)
  .debug_str     0x000000000000057f      0x159 FreeRTOS/source/list.o
@@ -2497,14 +2531,14 @@ OUTPUT(home_control_node.elf elf32-littlearm)
                                         0x323 (size before relaxing)
  .debug_str     0x000000000000084a      0xc16 FreeRTOS/source/tasks.o
                                        0x135c (size before relaxing)
- .debug_str     0x0000000000001460       0x2d src/ThreadLightSensor.o
-                                        0x1bb (size before relaxing)
- .debug_str     0x000000000000148d       0x21 src/main.o
+ .debug_str     0x0000000000001460       0x21 src/main.o
                                         0x5d5 (size before relaxing)
- .debug_str     0x00000000000014ae       0xa2 src/stm32f1xx_it.o
+ .debug_str     0x0000000000001481       0xa2 src/stm32f1xx_it.o
                                         0x228 (size before relaxing)
- .debug_str     0x0000000000001550      0x157 src/system_stm32f10x.o
+ .debug_str     0x0000000000001523      0x157 src/system_stm32f10x.o
                                         0x32f (size before relaxing)
+ .debug_str     0x000000000000167a       0x35 threads/src/ThreadLightSensor.o
+                                        0x1c3 (size before relaxing)
 
 .comment        0x0000000000000000       0x7c
  .comment       0x0000000000000000       0x7c FreeRTOS/source/heap_3.o
@@ -2512,20 +2546,20 @@ OUTPUT(home_control_node.elf elf32-littlearm)
  .comment       0x000000000000007c       0x7d FreeRTOS/source/list.o
  .comment       0x000000000000007c       0x7d FreeRTOS/source/port.o
  .comment       0x000000000000007c       0x7d FreeRTOS/source/tasks.o
- .comment       0x000000000000007c       0x7d src/ThreadLightSensor.o
  .comment       0x000000000000007c       0x7d src/main.o
  .comment       0x000000000000007c       0x7d src/stm32f1xx_it.o
  .comment       0x000000000000007c       0x7d src/system_stm32f10x.o
+ .comment       0x000000000000007c       0x7d threads/src/ThreadLightSensor.o
 
 .debug_frame    0x0000000000000000      0xdac
  .debug_frame   0x0000000000000000       0x58 FreeRTOS/source/heap_3.o
  .debug_frame   0x0000000000000058       0xd8 FreeRTOS/source/list.o
  .debug_frame   0x0000000000000130      0x154 FreeRTOS/source/port.o
  .debug_frame   0x0000000000000284      0x7c8 FreeRTOS/source/tasks.o
- .debug_frame   0x0000000000000a4c       0x30 src/ThreadLightSensor.o
- .debug_frame   0x0000000000000a7c       0x30 src/main.o
- .debug_frame   0x0000000000000aac       0xb0 src/stm32f1xx_it.o
- .debug_frame   0x0000000000000b5c       0x98 src/system_stm32f10x.o
+ .debug_frame   0x0000000000000a4c       0x30 src/main.o
+ .debug_frame   0x0000000000000a7c       0xb0 src/stm32f1xx_it.o
+ .debug_frame   0x0000000000000b2c       0x98 src/system_stm32f10x.o
+ .debug_frame   0x0000000000000bc4       0x30 threads/src/ThreadLightSensor.o
  .debug_frame   0x0000000000000bf4       0x2c /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-init.o)
  .debug_frame   0x0000000000000c20       0x30 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-malloc.o)
  .debug_frame   0x0000000000000c50       0x20 /opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7-m/libc_nano.a(lib_a-memset.o)
@@ -3066,7 +3100,9 @@ TIM_TimeBaseInit                                  Libraries/STM32F10x_StdPeriph_
 TIM_TimeBaseStructInit                            Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.o
 TIM_UpdateDisableConfig                           Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.o
 TIM_UpdateRequestConfig                           Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.o
-ThreadLightSensor                                 src/ThreadLightSensor.o
+ThreadCommunication                               threads/src/ThreadCommunication.o
+ThreadHealthMonitor                               threads/src/ThreadHealthMonitor.o
+ThreadLightSensor                                 threads/src/ThreadLightSensor.o
                                                   src/main.o
 USART1_IRQHandler                                 src/startup_stm32f10x_md.o
 USART2_IRQHandler                                 src/startup_stm32f10x_md.o
@@ -3366,7 +3402,9 @@ vPortSetupTimerInterrupt                          FreeRTOS/source/port.o
 vQueueDelete                                      FreeRTOS/source/queue.o
 vQueueSetQueueNumber                              FreeRTOS/source/queue.o
 vTaskDelay                                        FreeRTOS/source/tasks.o
-                                                  src/ThreadLightSensor.o
+                                                  threads/src/ThreadLightSensor.o
+                                                  threads/src/ThreadHealthMonitor.o
+                                                  threads/src/ThreadCommunication.o
 vTaskDelayUntil                                   FreeRTOS/source/tasks.o
 vTaskDelete                                       FreeRTOS/source/tasks.o
 vTaskEndScheduler                                 FreeRTOS/source/tasks.o
