@@ -6,3 +6,6 @@
  */
 
 
+/*
+ * get a topic name by uart and save to flash for future usage
+ */

@@ -16,7 +16,7 @@ typedef enum{
 }lightLevel_t;
 
 
-void GetLightLevel(void);
+lightLevel_t GetLightLevel(void);
 
 void ThreadLightSensor ( void * pvParameters );
 

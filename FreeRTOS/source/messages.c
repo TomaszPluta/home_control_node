@@ -5,12 +5,15 @@
  *      Author: tomek
  */
 
-#include "systemDefines.h
+#include "rtc.h"
 
-message_t CreateMessage(uint8 * data, uint8_t dataLen, uint8_t type){
+#include "systemDefines.h"
+
+message_t CreateMessage(uint8_t * data, uint8_t dataLen, uint8_t type){
 	message_t message;
-	message.data = data;
+	memcpy(&message.data, data, dataLen);
 	message.type = type;
 	message.dataLen = dataLen;
 	message.timeStamp = getCurrentTime;
+	return message;
 }
