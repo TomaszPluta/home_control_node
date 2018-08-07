@@ -18,13 +18,17 @@
 
 
 
-QueueHandle_t OutputQueue;
+QueueHandle_t internalMsgQueue;
+QueueHandle_t externalMsgQueue;
+
 
 
 
  int main(){
 
-	 OutputQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(message_t));
+	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
+	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
+
 
 	// 	xTaskCreate( bmp280_read_temp_full,  "bmp280_read_temp_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 	// 	xTaskCreate( bmp280_read_press_full, "bmp280_read_press_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);

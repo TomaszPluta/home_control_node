@@ -12,7 +12,7 @@
 #include "messages.h"
 #include "ThreadLightSensor.h"
 
-extern QueueHandle_t OutputQueue;
+extern QueueHandle_t internalMsgQueue;
 
 
 void LightSensorInit(void){
@@ -31,8 +31,8 @@ void ThreadLightSensor ( void * pvParameters )
 
 	for (;;) {
 		lightLevel_t lightLevel = GetLightLevel();
-		message_t message = CreateMessage((uint8_t*) &lightLevel, sizeof(lightLevel_t), lightLevel);
-		xQueueSend(OutputQueue, &message, 0);
+		msgDataInt_t message = CreateMessage((uint8_t*) &lightLevel, sizeof(lightLevel_t), lightLevel);
+		xQueueSend(internalMsgQueue, &message, 0);
 		vTaskDelay(1000);
 	}
 }

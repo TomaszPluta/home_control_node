@@ -10,6 +10,6 @@
 
 #include "stdint.h"
 
-message_t CreateMessage(uint8_t * data, uint8_t dataLen, uint8_t type);
+msgDataInt_t CreateMessage(uint8_t * data, uint8_t dataLen, uint8_t type);
 
 #endif /* MESSAGES_H_ */

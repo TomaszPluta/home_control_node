@@ -13,7 +13,10 @@
 #define OUTPUT_QUEUE_SIZE			(16)
 #define DATA_SIZE					(24)
 
-//#define MSG_TYPE_LIGHT				(1)
+#define BUF_SIZE_TX					(128)
+#define BUF_SIZE_RX					(128)
+
+#define CMD_TIMEOUT_MS				(500)
 
 
 
@@ -25,12 +28,22 @@ typedef enum {
 
 }msg_type_t;
 
+
+
+typedef struct{
+	uint8_t  data[DATA_SIZE];
+	uint8_t  dataLen;
+	msg_type_t  type;
+}msgDataInt_t;
+
+
+
 typedef struct{
 	uint8_t  data[DATA_SIZE];
 	uint8_t  dataLen;
 	msg_type_t  type;
 	uint32_t timeStamp;
-}message_t;
+}msgDataExt_t;
 
 
 #endif /* SYSTEMDEFINES_H_ */
