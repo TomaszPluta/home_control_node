@@ -25,7 +25,8 @@ QueueHandle_t externalMsgQueue;
 
 
  int main(){
-
+	 RTC_Init();
+	 RtcClear(); //not working
 	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
 	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
 
