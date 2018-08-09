@@ -12,13 +12,16 @@
 typedef struct tm tmTime_t;
 
 void RtcClear (void){
-	while(!(RTC->CRL & RTC_CRL_RSF));
-	RTC->CRL |= RTC_CRL_CNF;
-	while (!(RTC->CRL & RTC_CRL_RTOFF));
-	RTC->CNTH =0;
-	RTC->CNTL =0;
-	while (!(RTC->CRL & RTC_CRL_RTOFF));
-	RTC->CRL &= ~RTC_CRL_CNF;
+
+	PWR->CR |= PWR_CR_DBP;
+	RCC->BDCR |= RCC_BDCR_BDRST;
+	RCC->BDCR &= ~RCC_BDCR_BDRST;
+	RCC->BDCR |= RCC_BDCR_LSEON;
+	while (!(RCC->BDCR & RCC_BDCR_LSERDY));
+	RCC->BDCR |= RCC_BDCR_RTCSEL_LSE;
+	RCC->BDCR |= RCC_BDCR_RTCEN;
+	PWR->CR &= ~PWR_CR_DBP;
+
 }
 
 
@@ -26,6 +29,8 @@ void RTC_Init (tmTime_t time){
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
 	RCC->APB1ENR |= RCC_APB1ENR_BKPEN;
 	PWR->CR |= PWR_CR_DBP;
+	RCC->BDCR &= ~RCC_BDCR_BDRST;
+
 	RCC->BDCR |= RCC_BDCR_LSEON;
 	while (!(RCC->BDCR & RCC_BDCR_LSERDY));
 	RCC->BDCR |= RCC_BDCR_RTCSEL_LSE;
@@ -35,6 +40,8 @@ void RTC_Init (tmTime_t time){
 	RTC->CRL |= RTC_CRL_CNF;
 
 	RTC->PRLL = 0x7FFF;
+	RTC->CNTH =0;
+	RTC->CNTL =0;
 
 	RTC->CRL &= RTC_CRL_CNF;
 	while (!(RTC->CRL & RTC_CRL_RTOFF));
