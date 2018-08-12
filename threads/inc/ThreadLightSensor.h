@@ -9,6 +9,11 @@
 #define THREADLIGHTSENSOR_H_
 
 
+#define	APB2_PBA 			 2
+#define	APB2_PBB 			 3
+#define	APB2_PBC 			 4
+#define APB2_PBD  			 5
+
 
 typedef enum{
 	low =0,
