@@ -1,4 +1,4 @@
-#include "nrf24_hal.h"
+#include <nrf24_platform.h>
 #include "nrf24.h"
 
 // Configure the GPIO lines of the nRF24L01 transceiver

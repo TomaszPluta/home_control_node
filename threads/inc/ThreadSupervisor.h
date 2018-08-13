@@ -10,4 +10,6 @@
 
 
 
+void ThreadSupervisor ( void * pvParameters );
+
 #endif /* THREADSUPERVISOR_H_ */

@@ -15,7 +15,7 @@
 
 #include "systemDefines.h"
 #include "ThreadLightSensor.h"
-
+#include "ThreadSupervisor.h"
 
 
 QueueHandle_t internalMsgQueue;
@@ -25,15 +25,8 @@ QueueHandle_t externalMsgQueue;
 
 
  int main(){
-	 EnableGpioClk(APB2_PBB);
-	 SetGpioAsOutput(GPIOB, 9);
-	 SetGpioAsInput(GPIOB, 9);
 
-	 while(1){
-		bool on =  ReadtGpioPin(GPIOB, 9);
-		 on =  ReadtGpioPin(GPIOB, 9);
-		 reversed ligh sensor logic
-	 }
+
 	 RTC_Init();
 	 RtcClear();
 	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
@@ -42,6 +35,7 @@ QueueHandle_t externalMsgQueue;
 	// 	xTaskCreate( bmp280_read_temp_full,  "bmp280_read_temp_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 	// 	xTaskCreate( bmp280_read_press_full, "bmp280_read_press_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+	 	xTaskCreate( ThreadSupervisor, "Supervisor", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 	// 	xTaskCreate( nr24l01_receiver, "rex", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 	vTaskStartScheduler();
 

@@ -11,8 +11,8 @@
 *   http://www.tinkerer.eu/AVRLib/nRF24L01
 * -----------------------------------------------------------------------------
 */
+#include <nrf24_platform.h>
 #include "nrf24.h"
-#include "nrf24_hal.h"
 #include <string.h>
 uint8_t payload_len;
 
