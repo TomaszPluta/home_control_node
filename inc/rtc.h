@@ -9,7 +9,13 @@
 #define RTC_H_
 
 #include "stdint.h"
-uint32_t getCurrentTime (void);
+#include "time.h"
 
+typedef struct tm tmTime_t;
+
+
+uint32_t getCurrentTime (void);
+void RtcClear (void);
+void RTC_Init (tmTime_t time);
 
 #endif /* RTC_H_ */

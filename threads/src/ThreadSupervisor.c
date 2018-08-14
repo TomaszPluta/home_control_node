@@ -24,8 +24,6 @@ void ConvertToExtMsg(msgDataInt_t * msgDataInt, msgDataExt_t * msgDataExt){
 
 void ThreadSupervisor ( void * pvParameters )
 {
-
-
 	for (;;) {
 		//measurements scheduler here
 
@@ -38,6 +36,6 @@ void ThreadSupervisor ( void * pvParameters )
 		}
 
 		vTaskDelay(1000);
-	}
 
+	}
 }

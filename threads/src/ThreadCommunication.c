@@ -15,6 +15,28 @@
 #include "systemDefines.h"
 
 
+
+int client_rec(void *cntx, sockaddr_t * sockaddr, uint8_t* buf, uint16_t * buf_len){
+	if(nrf24_dataReady())
+	{
+		if(nrf24_dataReady())
+		{
+			uint8_t data_array[32];
+			nrf24_getData(data_array);
+			*buf_len =  l3_receive_packet(data_array, buf);
+			if (buf_len){
+				//no matter who send?
+				//sockaddr->sin_addr = Mqtt_get_rx_address();
+				GPIOC->BRR = GPIO_Pin_13;
+				return true;
+			}
+		}
+//		_delay_ms(10);
+		return false;
+	}
+}
+
+
 QueueHandle_t externalMsgQueue;
 
 int mqtt_message_cb(struct _MqttClient *client, MqttMessage *message, byte msg_new, byte msg_done){
@@ -26,11 +48,12 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 }
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
-	return 1;
+	receivePcktNRF24(buf, )
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
-	return 0;
+ 	nrf24_send(data_array);
+    _delay_ms(50);
 }
 
 int mqtt_net_disconnect_cb(void *context){
@@ -38,8 +61,41 @@ int mqtt_net_disconnect_cb(void *context){
 }
 
 
+
 void ThreadCommunication ( void * pvParameters )
 {
+
+	nrf24_init();
+	nRF24_restore_defaults();
+	gpio_init();
+
+	/* Channel #2 , payload length: 4 */
+	const uint8_t channel = 2;
+	const uint8_t payload_len = 32;
+	nrf24_config(channel, payload_len);
+	uint8_t rx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
+	uint8_t tx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
+	/* Set the device addresses */
+	nrf24_tx_address(tx_address);
+	nrf24_rx_address(rx_address);
+
+
+
+
+		while (1) {
+			if (!(IsGpioHigh(GPIOB, 11))){
+				GPIOC->ODR ^= GPIO_Pin_13;
+				uint8_t data_array[32] = {4, 5, 6};
+			  	nrf24_send(data_array);
+			    _delay_ms(400);
+			}
+
+			if (nrf24_dataReady() == 1){
+				GPIOC->ODR &= ~GPIO_Pin_13;
+			}
+		}
+
+
 
 
 	MqttNet net;
@@ -81,6 +137,13 @@ void ThreadCommunication ( void * pvParameters )
 
 	MqttClient_Subscribe(&client, &subscribe);
 	for (;;) {
+
+
+		MqttClient_WaitType();
+
+
+
+
 
 		msgDataExt_t messageExt;
 		if (xQueueReceive(externalMsgQueue, &messageExt, 0)){

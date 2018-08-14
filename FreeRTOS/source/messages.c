@@ -5,6 +5,8 @@
  *      Author: tomek
  */
 
+#include <string.h>
+
 #include "rtc.h"
 
 #include "systemDefines.h"

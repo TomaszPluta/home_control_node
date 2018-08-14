@@ -5,11 +5,11 @@
  *      Author: tomek
  */
 #include "rtc.h"
-#include "time.h"
+
 #include "stm32f10x.h"
 
 
-typedef struct tm tmTime_t;
+
 
 void RtcClear (void){
 

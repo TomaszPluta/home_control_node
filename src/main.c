@@ -17,14 +17,33 @@
 #include "ThreadLightSensor.h"
 #include "ThreadSupervisor.h"
 
+#include "gpio.h"
+#include "nrf24.h"
 
 QueueHandle_t internalMsgQueue;
 QueueHandle_t externalMsgQueue;
 
 
+static gpio_init(void){
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+
+	GPIO_InitTypeDef PORT;
+	PORT.GPIO_Mode = GPIO_Mode_Out_PP;
+	PORT.GPIO_Speed = GPIO_Speed_2MHz;
+	PORT.GPIO_Pin = GPIO_Pin_13;
+	GPIO_Init(GPIOC, &PORT);
+	GPIOC->ODR |= GPIO_Pin_13;
+
+	PORT.GPIO_Mode =  GPIO_Mode_IPU;
+	PORT.GPIO_Speed = GPIO_Speed_2MHz;
+	PORT.GPIO_Pin = GPIO_Pin_11;
+	GPIO_Init(GPIOB, &PORT);
+}
+
 
 
  int main(){
+
 
 
 	 RTC_Init();
@@ -40,8 +59,12 @@ QueueHandle_t externalMsgQueue;
 	 	vTaskStartScheduler();
 
 
-   while (1) {
- }
+
+
+
+
+
+
 
  }
 
