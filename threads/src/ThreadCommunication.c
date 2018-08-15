@@ -5,35 +5,35 @@
  *      Author: tomek
  */
 
+#include "stm32f10x.h"
 
 #include "FreeRTOS.h"
 #include "ThreadCommunication.h"
 #include "queue.h"
 
+#include "nrf24.h"
 
 #include "mqtt_client.h"
 #include "systemDefines.h"
 
 
-
-int client_rec(void *cntx, sockaddr_t * sockaddr, uint8_t* buf, uint16_t * buf_len){
+int client_rec(byte* buf){
 	if(nrf24_dataReady())
 	{
 		if(nrf24_dataReady())
-		{
+		{	uint8_t rxBytesNb;
 			uint8_t data_array[32];
 			nrf24_getData(data_array);
-			*buf_len =  l3_receive_packet(data_array, buf);
-			if (buf_len){
-				//no matter who send?
-				//sockaddr->sin_addr = Mqtt_get_rx_address();
+			rxBytesNb = l3_receive_packet(data_array, buf);
+			if (rxBytesNb){
+
 				GPIOC->BRR = GPIO_Pin_13;
-				return true;
+				return rxBytesNb;
 			}
 		}
 //		_delay_ms(10);
-		return false;
 	}
+	return 0;
 }
 
 
@@ -48,12 +48,11 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 }
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
-	receivePcktNRF24(buf, )
+	client_rec(buf);
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
- 	nrf24_send(data_array);
-    _delay_ms(50);
+	l3_send_packet(0, (uint8_t*) buf, buf_len);
 }
 
 int mqtt_net_disconnect_cb(void *context){
@@ -64,9 +63,10 @@ int mqtt_net_disconnect_cb(void *context){
 
 void ThreadCommunication ( void * pvParameters )
 {
-
+	vPortEnterCritical();
 	nrf24_init();
 	nRF24_restore_defaults();
+	vPortExitCritical();
 	gpio_init();
 
 	/* Channel #2 , payload length: 4 */
@@ -82,18 +82,18 @@ void ThreadCommunication ( void * pvParameters )
 
 
 
-		while (1) {
-			if (!(IsGpioHigh(GPIOB, 11))){
-				GPIOC->ODR ^= GPIO_Pin_13;
-				uint8_t data_array[32] = {4, 5, 6};
-			  	nrf24_send(data_array);
-			    _delay_ms(400);
-			}
-
-			if (nrf24_dataReady() == 1){
-				GPIOC->ODR &= ~GPIO_Pin_13;
-			}
-		}
+//		while (1) {
+//			if (!(IsGpioHigh(GPIOB, 11))){
+//				GPIOC->ODR ^= GPIO_Pin_13;
+//				uint8_t data_array[32] = {4, 5, 6};
+//			  	nrf24_send(data_array);
+//			    _delay_ms(400);
+//			}
+//
+//			if (nrf24_dataReady() == 1){
+//				GPIOC->ODR &= ~GPIO_Pin_13;
+//			}
+//		}
 
 
 
@@ -135,11 +135,17 @@ void ThreadCommunication ( void * pvParameters )
 	subscribe.topic_count = topic_count;
 	subscribe.topics = topics;
 
-	MqttClient_Subscribe(&client, &subscribe);
+	//MqttClient_Subscribe(&client, &subscribe);
 	for (;;) {
 
 
-		MqttClient_WaitType();
+//
+//		if (!(IsGpioHigh(GPIOB, 11))){
+//			MqttClient_Connect(&client, &mqtt_con);
+//			GPIOC->ODR ^= GPIO_Pin_13;
+//		}
+
+		MqttClient_WaitMessage(&client,100);
 
 
 
@@ -159,6 +165,6 @@ void ThreadCommunication ( void * pvParameters )
 		}
 
 		//poll sevrer b ping and inform supervisor about broken connection
-		vTaskDelay(100);
+		vTaskDelay(1000);
 	}
 }

@@ -16,6 +16,6 @@ typedef struct tm tmTime_t;
 
 uint32_t getCurrentTime (void);
 void RtcClear (void);
-void RTC_Init (tmTime_t time);
+void RTC_Init (void);
 
 #endif /* RTC_H_ */

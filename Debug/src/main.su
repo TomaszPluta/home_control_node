@@ -1,2 +1,2 @@
-main.c:27:8:gpio_init	16	static
-main.c:45:6:main	56	static
+main.c:28:7:gpio_init	16	static
+main.c:46:6:main	16	static

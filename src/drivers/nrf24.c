@@ -357,7 +357,7 @@ void nrf24_send(uint8_t* value)
      
     /* Set to transmitter mode , Power up if needed */
     nrf24_powerUpTx();
-    _delay_ms(50);
+//    _delay_ms(50);
     /* Do we really need to flush TX fifo each time ? */
     #if 1
         /* Pull down chip select */

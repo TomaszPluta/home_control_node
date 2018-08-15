@@ -18,7 +18,7 @@
 
 #define CMD_TIMEOUT_MS				(500)
 
-
+#define CENTER_ADDR					{0xE7,0xE7,0xE7,0xE7,0xE7}
 
 #define BALCONY_LIGHT_TOPIC 				"Balcony/Light"
 #define BALCONY_TEMP_TOPIC 					"Balcony/Temp"

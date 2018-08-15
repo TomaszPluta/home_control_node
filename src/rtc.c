@@ -25,7 +25,7 @@ void RtcClear (void){
 }
 
 
-void RTC_Init (tmTime_t time){
+void RTC_Init (void){
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
 	RCC->APB1ENR |= RCC_APB1ENR_BKPEN;
 	PWR->CR |= PWR_CR_DBP;

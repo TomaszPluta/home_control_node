@@ -16,15 +16,16 @@
 #include "systemDefines.h"
 #include "ThreadLightSensor.h"
 #include "ThreadSupervisor.h"
+#include "ThreadCommunication.h"
 
-#include "gpio.h"
-#include "nrf24.h"
-
+#include "gpio.h"//
+#include "nrf24.h"//
+#include "rtc.h"
 QueueHandle_t internalMsgQueue;
 QueueHandle_t externalMsgQueue;
 
 
-static gpio_init(void){
+void  gpio_init(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 
 	GPIO_InitTypeDef PORT;
@@ -51,11 +52,9 @@ static gpio_init(void){
 	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
 	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
 
-	// 	xTaskCreate( bmp280_read_temp_full,  "bmp280_read_temp_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-	// 	xTaskCreate( bmp280_read_press_full, "bmp280_read_press_full", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 	xTaskCreate( ThreadSupervisor, "Supervisor", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
-	// 	xTaskCreate( nr24l01_receiver, "rex", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
+	 //	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+	 	xTaskCreate( ThreadCommunication, "Communication", 2048, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 	vTaskStartScheduler();
 
 
