@@ -22,6 +22,6 @@
 
 
 void EnableUart (USART_TypeDef * usart);
-
+void SendString (const char* string);
 
 #endif /* PLATFORM_H_ */

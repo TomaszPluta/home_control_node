@@ -9,6 +9,7 @@
 
 #include "FreeRTOS.h"
 #include "queue.h"
+#include "task.h"
 
 #include "ThreadCommunication.h"
 
@@ -16,6 +17,10 @@
 
 #include "mqtt_client.h"
 #include "systemDefines.h"
+
+
+extern QueueHandle_t logMsgQueue;
+
 
 
 int client_rec(byte* buf, uint16_t bufLen){
@@ -49,11 +54,17 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 }
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
-	client_rec(buf, buf_len);
+
+	uint32_t enterTimestamp = xTaskGetTickCount();
+	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
+		client_rec(buf, buf_len);
+	}
+	return 1;
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
 	l3_send_packet(0, (uint8_t*) buf, buf_len);
+	return 1;
 }
 
 int mqtt_net_disconnect_cb(void *context){
@@ -62,8 +73,10 @@ int mqtt_net_disconnect_cb(void *context){
 
 
 
-void ThreadCommunication ( void * pvParameters )
+void  ThreadCommunication ( void * pvParameters )
 {
+	xQueueSend(logMsgQueue, "communication started", 0);
+
 	vPortEnterCritical();
 	nrf24_init();
 	nRF24_restore_defaults();
@@ -120,6 +133,7 @@ void ThreadCommunication ( void * pvParameters )
 	mqtt_con.password = "passw0rd";
 	MqttClient_Connect(&client, &mqtt_con);
 
+	xQueueSend(logMsgQueue, "client connected", 0);
 
 	const char* test_topic1 = "flat/livingroom/temp/1";
 	const char* test_topic2 = "flat/bedroom/humidity/2";
@@ -137,6 +151,7 @@ void ThreadCommunication ( void * pvParameters )
 	subscribe.topics = topics;
 
 	MqttClient_Subscribe(&client, &subscribe);
+	xQueueSend(logMsgQueue, "client subsribe", 0);
 	for (;;) {
 
 
@@ -154,11 +169,13 @@ void ThreadCommunication ( void * pvParameters )
 
 		msgDataExt_t messageExt;
 		if (xQueueReceive(externalMsgQueue, &messageExt, 0)){
+
 			MqttPublish publishPckt;
 			switch (messageExt.type){
 			case lightLevel:
 				publishPckt.topic_name = test_topic1;
 				publishPckt.topic_name_len = sizeof(test_topic1);
+				xQueueSend(logMsgQueue, "light msg rcv", 0);
 			}
 
 

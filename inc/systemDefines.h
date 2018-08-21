@@ -14,11 +14,13 @@
 #define DATA_SIZE					(24)
 
 #define MAX_CMD_SIZE				(32)
+#define MAX_LOG_SIZE				(32)
+
 
 #define BUF_SIZE_TX					(128)
 #define BUF_SIZE_RX					(128)
 
-#define CMD_TIMEOUT_MS				(500)
+#define CMD_TIMEOUT_MS				(300)
 
 #define CENTER_ADDR					{0xE7,0xE7,0xE7,0xE7,0xE7}
 

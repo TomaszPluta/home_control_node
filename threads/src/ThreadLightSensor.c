@@ -18,7 +18,7 @@
 #include "ThreadLightSensor.h"
 
 extern QueueHandle_t internalMsgQueue;
-
+extern QueueHandle_t logMsgQueue;
 
 void LightSensorInit(void){
 	EnableGpioClk(Light_SENSOR_PORT);
@@ -38,6 +38,8 @@ lightLevel_t GetLightLevel(void){
 
 void ThreadLightSensor ( void * pvParameters )
 {
+//	xQueueSend(logMsgQueue, "LightSensor started", 0);
+
 	LightSensorInit();
 	//GetThreadConfig();
 	for (;;) {

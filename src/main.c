@@ -17,6 +17,8 @@
 #include "ThreadLightSensor.h"
 #include "ThreadSupervisor.h"
 #include "ThreadCommunication.h"
+#include "ThreadServiceMode.h"
+
 
 #include "platform.h"
 #include "gpio.h"//
@@ -64,8 +66,9 @@ void  gpio_init(void){
 	 logMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
 
 	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 //	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+	 	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 	xTaskCreate( ThreadCommunication, "Communication", 2048, NULL, tskIDLE_PRIORITY + 1, NULL);
+		xTaskCreate( ThreadServiceMode, "ServiceMode", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 	vTaskStartScheduler();
 
 

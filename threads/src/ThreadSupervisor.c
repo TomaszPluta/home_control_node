@@ -12,7 +12,7 @@
 
 extern QueueHandle_t internalMsgQueue;
 extern QueueHandle_t externalMsgQueue;
-
+extern QueueHandle_t logMsgQueue;
 
 
 void ConvertToExtMsg(msgDataInt_t * msgDataInt, msgDataExt_t * msgDataExt){
@@ -24,6 +24,8 @@ void ConvertToExtMsg(msgDataInt_t * msgDataInt, msgDataExt_t * msgDataExt){
 
 void ThreadSupervisor ( void * pvParameters )
 {
+	xQueueSend(logMsgQueue, "supervisor started", 0);
+
 	for (;;) {
 		//measurements scheduler here
 

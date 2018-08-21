@@ -9,5 +9,6 @@
 #define THREADSERVICEMODE_H_
 
 
+void ThreadServiceMode ( void * pvParameters );
 
 #endif /* THREADSERVICEMODE_H_ */

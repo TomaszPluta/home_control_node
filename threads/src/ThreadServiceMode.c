@@ -7,21 +7,25 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "ThreadServiceMode.h"
-
+#include "systemDefines.h"
 
 extern QueueHandle_t logMsgQueue;
 
 
 
-void ThreadCommunication ( void * pvParameters )
+void ThreadServiceMode ( void * pvParameters )
 {
-	commandBuff[MAX_CMD_SIZE];
-	if (xQueueReceive(logMsgQueue, &commandBuff, MAX_CMD_SIZE)){
-			msgDataExt_t messageExt;
+	xQueueSend(logMsgQueue, "serviceMode started", 0);
+
+	for (;;) {
+		char commandBuff[MAX_CMD_SIZE];
+		if (xQueueReceive(logMsgQueue, &commandBuff, MAX_CMD_SIZE)){
+			SendString(commandBuff);
+		}
 	}
-	uint8_t x = 4;
-	while (x){
-		uint16_t c = uart1_receive();
-		uart1_send(c);
-	}
+//	uint8_t x = 4;
+//	while (x){
+//		uint16_t c = uart1_receive();
+//		uart1_send(c);
+//	}
 }

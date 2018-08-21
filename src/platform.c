@@ -34,7 +34,19 @@ void uart1_send(uint16_t c){
 }
 
 
-void SendLine
+void SendString (const char* string){
+	const uint8_t maxCharToSend = 32;
+	uint8_t i;
+	while (string[i] != 0)
+	{
+		uart1_send(string[i]);
+		i++;
+		if (i == maxCharToSend){
+			break;
+		}
+	}
+	uart1_send(0xA);
+}
 
 
 
