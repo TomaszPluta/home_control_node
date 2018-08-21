@@ -31,10 +31,14 @@
 
 
 #define FRAME_SIZE 		32
-#define L2_HEAD_SIZE 	2
+#define L2_HEAD_SIZE 	6
 #define L2_DATA_SIZE 	(FRAME_SIZE - L2_HEAD_SIZE)
 #define H_FRM           0
 #define H_TOTAL         1
+#define H_LENH          2
+#define H_LENL          3
+#define H_CRCH          4
+#define H_CRCL          5
 
 /* adjustment functions */
 void    nrf24_init();
@@ -81,7 +85,7 @@ void    nrf24_writeRegister(uint8_t reg, uint8_t* value, uint8_t len);
 
 
 void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len);
-bool l3_receive_packet(uint8_t *data, uint8_t * packet_buff);
+uint16_t l3_receive_packet(uint8_t *data, uint8_t * packet_buff, uint16_t buff_len);
 void nRF24_restore_defaults(void);
 
 // nRF24L0 instruction definitions

@@ -8,8 +8,9 @@
 #include "stm32f10x.h"
 
 #include "FreeRTOS.h"
-#include "ThreadCommunication.h"
 #include "queue.h"
+
+#include "ThreadCommunication.h"
 
 #include "nrf24.h"
 
@@ -17,14 +18,14 @@
 #include "systemDefines.h"
 
 
-int client_rec(byte* buf){
+int client_rec(byte* buf, uint16_t bufLen){
 	if(nrf24_dataReady())
 	{
 		if(nrf24_dataReady())
 		{	uint8_t rxBytesNb;
 			uint8_t data_array[32];
 			nrf24_getData(data_array);
-			rxBytesNb = l3_receive_packet(data_array, buf);
+			rxBytesNb = l3_receive_packet(data_array, buf, bufLen);
 			if (rxBytesNb){
 
 				GPIOC->BRR = GPIO_Pin_13;
@@ -48,7 +49,7 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 }
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
-	client_rec(buf);
+	client_rec(buf, buf_len);
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
@@ -135,7 +136,7 @@ void ThreadCommunication ( void * pvParameters )
 	subscribe.topic_count = topic_count;
 	subscribe.topics = topics;
 
-	//MqttClient_Subscribe(&client, &subscribe);
+	MqttClient_Subscribe(&client, &subscribe);
 	for (;;) {
 
 

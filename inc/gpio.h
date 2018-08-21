@@ -13,4 +13,16 @@
 
 bool IsGpioHigh(GPIO_TypeDef * gpioPort, uint8_t pinNb);
 
+void EnableGpioClk (GPIO_TypeDef * gpioPort);
+
+void SetGpioAsInput (GPIO_TypeDef * gpioPort, uint8_t pinNb);
+
+void SetGpioAsInFloating (GPIO_TypeDef * gpioPort, uint8_t pinNb);
+
+void SetGpioAsOutAltPushPUll (GPIO_TypeDef * gpioPort, uint8_t pinNb);
+
+
+void SetGpioAsOutput(GPIO_TypeDef * gpioPort, uint8_t pinNb);
+
+
 #endif /* GPIO_H_ */

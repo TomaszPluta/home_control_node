@@ -21,6 +21,49 @@ uint8_t payload_len;
 
 
 
+uint16_t calculateCRC16(const uint8_t * data_p, uint16_t length){
+    uint8_t x;
+    uint16_t crc = 0xFFFF;
+
+    while (length--){
+        x = crc >> 8 ^ *data_p++;
+        x ^= x>>4;
+        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x <<5)) ^ ((uint16_t)x);
+    }
+    return crc;
+}
+
+
+
+//
+//void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
+//	uint8_t pos=0;
+//	uint8_t frame[FRAME_SIZE];
+//	uint8_t frm_nb = 0;
+//	uint8_t total_frames_nb;
+//	uint8_t remaining_len = len;
+//	uint8_t size_to_send;
+//
+//	total_frames_nb = (len + (L2_DATA_SIZE - 1)) / L2_DATA_SIZE;
+//
+//	while (frm_nb < total_frames_nb){
+//		memset(&frame[0], 0, FRAME_SIZE);
+//
+//		frame[H_FRM] = frm_nb;
+//		frame[H_TOTAL] = total_frames_nb;
+//
+//		size_to_send = (remaining_len > L2_DATA_SIZE)? L2_DATA_SIZE : remaining_len;
+//		memcpy(&frame[0 + L2_HEAD_SIZE], &data[pos], size_to_send);
+//		nrf24_send(frame);
+//
+//		remaining_len -= size_to_send;
+//		pos += L2_DATA_SIZE;
+//		frm_nb++;
+//	}
+//}
+
+
+
 
 
 void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
@@ -38,6 +81,11 @@ void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
 
 		frame[H_FRM] = frm_nb;
 		frame[H_TOTAL] = total_frames_nb;
+		frame[H_LENH] = len >> 8;
+		frame[H_LENL] = (uint8_t) len & 0xFF;
+		uint16_t calcCRC = calculateCRC16(data, len);
+		frame[H_CRCH] = calcCRC >> 8;
+		frame[H_CRCL] = calcCRC & 0xFF;
 
 		size_to_send = (remaining_len > L2_DATA_SIZE)? L2_DATA_SIZE : remaining_len;
 		memcpy(&frame[0 + L2_HEAD_SIZE], &data[pos], size_to_send);
@@ -52,21 +100,43 @@ void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
 
 
 
+uint16_t l3_receive_packet(uint8_t *data, uint8_t * packet_buff, uint16_t buff_len){
 
+	if (data[H_FRM] == 0){
+		memset (packet_buff, 0, buff_len);
+	}
 
-
-
-
-bool l3_receive_packet(uint8_t *data, uint8_t * packet_buff){
 	if (data[H_FRM] < data[H_TOTAL]){
 		uint8_t frm_nb = data[H_FRM];
 		memcpy(&packet_buff[L2_DATA_SIZE * frm_nb], &data[0+ L2_HEAD_SIZE], L2_DATA_SIZE);
 		if ((data[H_FRM]+1) == data[H_TOTAL]){
-			return true;
+			uint16_t pcktLen = (data[H_LENH] << 8) + data[H_LENL];
+			uint16_t rxPcktCRC =  (data[H_CRCH]<<8)  + data[H_CRCL];
+			uint16_t calcCRC = calculateCRC16(packet_buff, pcktLen);
+			if (rxPcktCRC == calcCRC){
+				return (L2_DATA_SIZE * (frm_nb+1));
+			}
 		}
 	}
-	return false;
+	return 0;
 }
+
+
+
+
+//
+//
+//
+//bool l3_receive_packet(uint8_t *data, uint8_t * packet_buff){
+//	if (data[H_FRM] < data[H_TOTAL]){
+//		uint8_t frm_nb = data[H_FRM];
+//		memcpy(&packet_buff[L2_DATA_SIZE * frm_nb], &data[0+ L2_HEAD_SIZE], L2_DATA_SIZE);
+//		if ((data[H_FRM]+1) == data[H_TOTAL]){
+//			return true;
+//		}
+//	}
+//	return false;
+//}
 
 
 

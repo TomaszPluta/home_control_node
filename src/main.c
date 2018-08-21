@@ -18,12 +18,13 @@
 #include "ThreadSupervisor.h"
 #include "ThreadCommunication.h"
 
+#include "platform.h"
 #include "gpio.h"//
 #include "nrf24.h"//
 #include "rtc.h"
 QueueHandle_t internalMsgQueue;
 QueueHandle_t externalMsgQueue;
-
+QueueHandle_t logMsgQueue;
 
 void  gpio_init(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -47,10 +48,20 @@ void  gpio_init(void){
 
 
 
+	 	EnableGpioClk(LOG_UART_PORT);
+	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);
+	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
+	 	EnableUart(USART1);
+
+
+
+
+
 	 RTC_Init();
 	 RtcClear();
 	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
 	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
+	 logMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
 
 	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
 	 //	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);

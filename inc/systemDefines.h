@@ -13,6 +13,8 @@
 #define OUTPUT_QUEUE_SIZE			(16)
 #define DATA_SIZE					(24)
 
+#define MAX_CMD_SIZE				(32)
+
 #define BUF_SIZE_TX					(128)
 #define BUF_SIZE_RX					(128)
 

@@ -16,6 +16,12 @@
 #define Light_SENSOR_PORT    (GPIOB)
 #define Light_SENSOR_PIN     (9)
 
+#define LOG_UART_PORT 	(GPIOA)
+#define LOG_UART_PIN_TX 	(9)
+#define LOG_UART_PIN_RX 	(10)
+
+
+void EnableUart (USART_TypeDef * usart);
 
 
 #endif /* PLATFORM_H_ */
