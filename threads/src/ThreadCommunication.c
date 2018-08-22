@@ -57,9 +57,12 @@ int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
 
 	uint32_t enterTimestamp = xTaskGetTickCount();
 	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
-		client_rec(buf, buf_len);
+		uint8_t rxNb = client_rec(buf, buf_len);
+		if (rxNb >0){
+			return rxNb;
+		}
 	}
-	return 1;
+	return -1;
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){

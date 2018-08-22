@@ -20,7 +20,7 @@
 #define BUF_SIZE_TX					(128)
 #define BUF_SIZE_RX					(128)
 
-#define CMD_TIMEOUT_MS				(300)
+#define CMD_TIMEOUT_MS				(700)
 
 #define CENTER_ADDR					{0xE7,0xE7,0xE7,0xE7,0xE7}
 

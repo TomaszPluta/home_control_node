@@ -5,37 +5,37 @@ Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
   0 .isr_vector   0000010c  08000000  08000000  00010000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         000045d8  08000110  08000110  00010110  2**4
+  1 .text         000045e8  08000110  08000110  00010110  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       0000010c  080046e8  080046e8  000146e8  2**2
+  2 .rodata       0000010c  080046f8  080046f8  000146f8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .init_array   00000004  080047f4  080047f4  000147f4  2**2
+  3 .init_array   00000004  08004804  08004804  00014804  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  4 .fini_array   00000004  080047f8  080047f8  000147f8  2**2
+  4 .fini_array   00000004  08004808  08004808  00014808  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  5 .data         00000068  20000000  080047fc  00020000  2**2
+  5 .data         00000068  20000000  0800480c  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .bss          00000140  20000068  08004864  00020068  2**2
+  6 .bss          00000140  20000068  08004874  00020068  2**2
                   ALLOC
-  7 ._user_heap_stack 00001000  200001a8  08004864  000201a8  2**0
+  7 ._user_heap_stack 00001000  200001a8  08004874  000201a8  2**0
                   ALLOC
   8 .ARM.attributes 00000029  00000000  00000000  00020068  2**0
                   CONTENTS, READONLY
-  9 .debug_info   0000fc62  00000000  00000000  00020091  2**0
+  9 .debug_info   0000fc7a  00000000  00000000  00020091  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_abbrev 0000287c  00000000  00000000  0002fcf3  2**0
+ 10 .debug_abbrev 0000287c  00000000  00000000  0002fd0b  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_aranges 00000b18  00000000  00000000  00032570  2**3
+ 11 .debug_aranges 00000b18  00000000  00000000  00032588  2**3
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000009e0  00000000  00000000  00033088  2**3
+ 12 .debug_ranges 000009e0  00000000  00000000  000330a0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_line   000050aa  00000000  00000000  00033a68  2**0
+ 13 .debug_line   000050ac  00000000  00000000  00033a80  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    00003a38  00000000  00000000  00038b12  2**0
+ 14 .debug_str    00003a3d  00000000  00000000  00038b2c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .comment      0000007c  00000000  00000000  0003c54a  2**0
+ 15 .comment      0000007c  00000000  00000000  0003c569  2**0
                   CONTENTS, READONLY
- 16 .debug_frame  00002c38  00000000  00000000  0003c5c8  2**2
+ 16 .debug_frame  00002c38  00000000  00000000  0003c5e8  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -54,7 +54,7 @@ Disassembly of section .text:
  8000126:	bd10      	pop	{r4, pc}
  8000128:	20000068 	.word	0x20000068
  800012c:	00000000 	.word	0x00000000
- 8000130:	080046d0 	.word	0x080046d0
+ 8000130:	080046e0 	.word	0x080046e0
 
 08000134 <frame_dummy>:
  8000134:	b508      	push	{r3, lr}
@@ -66,7 +66,7 @@ Disassembly of section .text:
  8000142:	bd08      	pop	{r3, pc}
  8000144:	00000000 	.word	0x00000000
  8000148:	2000006c 	.word	0x2000006c
- 800014c:	080046d0 	.word	0x080046d0
+ 800014c:	080046e0 	.word	0x080046e0
 
 08000150 <strlen>:
  8000150:	4603      	mov	r3, r0
@@ -95,7 +95,7 @@ void *pvReturn;
 	{
 		pvReturn = malloc( xWantedSize );
  800016c:	6878      	ldr	r0, [r7, #4]
- 800016e:	f004 f9c1 	bl	80044f4 <malloc>
+ 800016e:	f004 f9c9 	bl	8004504 <malloc>
  8000172:	4603      	mov	r3, r0
  8000174:	60fb      	str	r3, [r7, #12]
 		traceMALLOC( pvReturn, xWantedSize );
@@ -134,7 +134,7 @@ void vPortFree( void *pv )
 		{
 			free( pv );
  8000196:	6878      	ldr	r0, [r7, #4]
- 8000198:	f004 f9b4 	bl	8004504 <free>
+ 8000198:	f004 f9bc 	bl	8004514 <free>
 			traceFREE( pv, 0 );
 		}
 		( void ) xTaskResumeAll();
@@ -1794,7 +1794,7 @@ UBaseType_t uxMessagesWaiting;
  80009ba:	6c1b      	ldr	r3, [r3, #64]	; 0x40
  80009bc:	461a      	mov	r2, r3
  80009be:	68b9      	ldr	r1, [r7, #8]
- 80009c0:	f003 fda8 	bl	8004514 <memcpy>
+ 80009c0:	f003 fdb0 	bl	8004524 <memcpy>
 		pxQueue->pcWriteTo += pxQueue->uxItemSize;
  80009c4:	68fb      	ldr	r3, [r7, #12]
  80009c6:	689a      	ldr	r2, [r3, #8]
@@ -1829,7 +1829,7 @@ UBaseType_t uxMessagesWaiting;
  80009ee:	6c1b      	ldr	r3, [r3, #64]	; 0x40
  80009f0:	461a      	mov	r2, r3
  80009f2:	68b9      	ldr	r1, [r7, #8]
- 80009f4:	f003 fd8e 	bl	8004514 <memcpy>
+ 80009f4:	f003 fd96 	bl	8004524 <memcpy>
 		pxQueue->u.pcReadFrom -= pxQueue->uxItemSize;
  80009f8:	68fb      	ldr	r3, [r7, #12]
  80009fa:	68da      	ldr	r2, [r3, #12]
@@ -1947,7 +1947,7 @@ static void prvCopyDataFromQueue( Queue_t * const pxQueue, void * const pvBuffer
  8000a82:	6c1b      	ldr	r3, [r3, #64]	; 0x40
  8000a84:	461a      	mov	r2, r3
  8000a86:	6838      	ldr	r0, [r7, #0]
- 8000a88:	f003 fd44 	bl	8004514 <memcpy>
+ 8000a88:	f003 fd4c 	bl	8004524 <memcpy>
 	}
 }
  8000a8c:	bf00      	nop
@@ -2327,7 +2327,7 @@ BaseType_t xReturn;
  8000c2a:	009b      	lsls	r3, r3, #2
  8000c2c:	461a      	mov	r2, r3
  8000c2e:	21a5      	movs	r1, #165	; 0xa5
- 8000c30:	f003 fc7b 	bl	800452a <memset>
+ 8000c30:	f003 fc83 	bl	800453a <memset>
 	grows from high memory to low (as per the 80x86) or vice versa.
 	portSTACK_GROWTH is used to make the result positive or negative as required
 	by the port. */
@@ -2816,7 +2816,7 @@ void vTaskStartScheduler( void )
  8000e7c:	bd80      	pop	{r7, pc}
  8000e7e:	bf00      	nop
  8000e80:	20000180 	.word	0x20000180
- 8000e84:	080046e8 	.word	0x080046e8
+ 8000e84:	080046f8 	.word	0x080046f8
  8000e88:	08001371 	.word	0x08001371
  8000e8c:	2000017c 	.word	0x2000017c
  8000e90:	20000168 	.word	0x20000168
@@ -6097,7 +6097,7 @@ int MqttClient_Init(MqttClient *client, MqttNet* net,
  8001f5a:	226c      	movs	r2, #108	; 0x6c
  8001f5c:	2100      	movs	r1, #0
  8001f5e:	68f8      	ldr	r0, [r7, #12]
- 8001f60:	f002 fae3 	bl	800452a <memset>
+ 8001f60:	f002 faeb 	bl	800453a <memset>
 
     /* Setup client structure */
     client->msg_cb = msg_cb;
@@ -6407,7 +6407,7 @@ int MqttClient_Publish(MqttClient *client, MqttPublish *publish)
  8002116:	687b      	ldr	r3, [r7, #4]
  8002118:	6b9b      	ldr	r3, [r3, #56]	; 0x38
  800211a:	461a      	mov	r2, r3
- 800211c:	f002 f9fa 	bl	8004514 <memcpy>
+ 800211c:	f002 fa02 	bl	8004524 <memcpy>
 
             #ifdef WOLFMQTT_NONBLOCK
                 return MQTT_CODE_CONTINUE;
@@ -7239,7 +7239,7 @@ int MqttEncode_String(byte *buf, const char *str)
  80025aa:	461a      	mov	r2, r3
  80025ac:	6839      	ldr	r1, [r7, #0]
  80025ae:	6878      	ldr	r0, [r7, #4]
- 80025b0:	f001 ffb0 	bl	8004514 <memcpy>
+ 80025b0:	f001 ffb8 	bl	8004524 <memcpy>
     return len + str_len;
  80025b4:	68ba      	ldr	r2, [r7, #8]
  80025b6:	68fb      	ldr	r3, [r7, #12]
@@ -7278,7 +7278,7 @@ int MqttEncode_Data(byte *buf, const byte *data, word16 data_len)
  80025e6:	461a      	mov	r2, r3
  80025e8:	68b9      	ldr	r1, [r7, #8]
  80025ea:	68f8      	ldr	r0, [r7, #12]
- 80025ec:	f001 ff92 	bl	8004514 <memcpy>
+ 80025ec:	f001 ff9a 	bl	8004524 <memcpy>
     return len + data_len;
  80025f0:	88fa      	ldrh	r2, [r7, #6]
  80025f2:	697b      	ldr	r3, [r7, #20]
@@ -7668,7 +7668,7 @@ int MqttEncode_Connect(byte *tx_buf, int tx_buf_len, MqttConnect *connect)
  8002856:	3728      	adds	r7, #40	; 0x28
  8002858:	46bd      	mov	sp, r7
  800285a:	bd80      	pop	{r7, pc}
- 800285c:	080046f0 	.word	0x080046f0
+ 800285c:	08004700 	.word	0x08004700
 
 08002860 <MqttDecode_ConnectAck>:
 
@@ -7922,7 +7922,7 @@ int MqttEncode_Publish(byte *tx_buf, int tx_buf_len, MqttPublish *publish)
  80029c6:	69ba      	ldr	r2, [r7, #24]
  80029c8:	4619      	mov	r1, r3
  80029ca:	6978      	ldr	r0, [r7, #20]
- 80029cc:	f001 fda2 	bl	8004514 <memcpy>
+ 80029cc:	f001 fdaa 	bl	8004524 <memcpy>
     }
     publish->buffer_pos = 0;
  80029d0:	687b      	ldr	r3, [r7, #4]
@@ -9709,7 +9709,7 @@ void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
  8003390:	2220      	movs	r2, #32
  8003392:	2100      	movs	r1, #0
  8003394:	4618      	mov	r0, r3
- 8003396:	f001 f8c8 	bl	800452a <memset>
+ 8003396:	f001 f8d0 	bl	800453a <memset>
 
 		frame[H_FRM] = frm_nb;
  800339a:	f897 302e 	ldrb.w	r3, [r7, #46]	; 0x2e
@@ -9758,7 +9758,7 @@ void l3_send_packet (uint8_t addr, uint8_t * data, uint8_t len){
  80033ec:	f107 0308 	add.w	r3, r7, #8
  80033f0:	3306      	adds	r3, #6
  80033f2:	4618      	mov	r0, r3
- 80033f4:	f001 f88e 	bl	8004514 <memcpy>
+ 80033f4:	f001 f896 	bl	8004524 <memcpy>
 		nrf24_send(frame);
  80033f8:	f107 0308 	add.w	r3, r7, #8
  80033fc:	4618      	mov	r0, r3
@@ -9814,7 +9814,7 @@ uint16_t l3_receive_packet(uint8_t *data, uint8_t * packet_buff, uint16_t buff_l
  8003454:	461a      	mov	r2, r3
  8003456:	2100      	movs	r1, #0
  8003458:	68b8      	ldr	r0, [r7, #8]
- 800345a:	f001 f866 	bl	800452a <memset>
+ 800345a:	f001 f86e 	bl	800453a <memset>
 	}
 
 	if (data[H_FRM] < data[H_TOTAL]){
@@ -9840,7 +9840,7 @@ uint16_t l3_receive_packet(uint8_t *data, uint8_t * packet_buff, uint16_t buff_l
  8003482:	3306      	adds	r3, #6
  8003484:	221a      	movs	r2, #26
  8003486:	4619      	mov	r1, r3
- 8003488:	f001 f844 	bl	8004514 <memcpy>
+ 8003488:	f001 f84c 	bl	8004524 <memcpy>
 		if ((data[H_FRM]+1) == data[H_TOTAL]){
  800348c:	68fb      	ldr	r3, [r7, #12]
  800348e:	781b      	ldrb	r3, [r3, #0]
@@ -11201,12 +11201,12 @@ void  gpio_init(void){
  8003c38:	2000019c 	.word	0x2000019c
  8003c3c:	200001a0 	.word	0x200001a0
  8003c40:	20000198 	.word	0x20000198
- 8003c44:	080046fc 	.word	0x080046fc
- 8003c48:	08004445 	.word	0x08004445
- 8003c4c:	08004708 	.word	0x08004708
- 8003c50:	080041a9 	.word	0x080041a9
- 8003c54:	08004718 	.word	0x08004718
- 8003c58:	080043dd 	.word	0x080043dd
+ 8003c44:	0800470c 	.word	0x0800470c
+ 8003c48:	08004455 	.word	0x08004455
+ 8003c4c:	08004718 	.word	0x08004718
+ 8003c50:	080041b9 	.word	0x080041b9
+ 8003c54:	08004728 	.word	0x08004728
+ 8003c58:	080043ed 	.word	0x080043ed
 
 08003c5c <EnableUart>:
 #include "stm32f10x.h"
@@ -11623,7 +11623,7 @@ LoopFillZerobss:
  8003ec2:	f000 f82b 	bl	8003f1c <SystemInit>
 /* Call static constructors */
     bl __libc_init_array
- 8003ec6:	f000 faf1 	bl	80044ac <__libc_init_array>
+ 8003ec6:	f000 faf9 	bl	80044bc <__libc_init_array>
 /* Call the application's entry point.*/
 	bl	main
  8003eca:	f7ff fe5d 	bl	8003b88 <main>
@@ -11632,7 +11632,7 @@ LoopFillZerobss:
   ldr   sp, =_estack    /* Atollic update: set stack pointer */
  8003ed0:	20005000 	.word	0x20005000
 	ldr	r3, =_sidata
- 8003ed4:	080047fc 	.word	0x080047fc
+ 8003ed4:	0800480c 	.word	0x0800480c
 	ldr	r0, =_sdata
  8003ed8:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -12159,758 +12159,768 @@ int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
  8004140:	f7fc ff46 	bl	8000fd0 <xTaskGetTickCount>
  8004144:	6178      	str	r0, [r7, #20]
 	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
- 8004146:	e005      	b.n	8004154 <mqtt_net_read_cb+0x22>
-		client_rec(buf, buf_len);
+ 8004146:	e00c      	b.n	8004162 <mqtt_net_read_cb+0x30>
+		uint8_t rxNb = client_rec(buf, buf_len);
  8004148:	687b      	ldr	r3, [r7, #4]
  800414a:	b29b      	uxth	r3, r3
  800414c:	4619      	mov	r1, r3
  800414e:	68b8      	ldr	r0, [r7, #8]
  8004150:	f7ff ff9e 	bl	8004090 <client_rec>
+ 8004154:	4603      	mov	r3, r0
+ 8004156:	74fb      	strb	r3, [r7, #19]
+		if (rxNb >0){
+ 8004158:	7cfb      	ldrb	r3, [r7, #19]
+ 800415a:	2b00      	cmp	r3, #0
+ 800415c:	d001      	beq.n	8004162 <mqtt_net_read_cb+0x30>
+			return rxNb;
+ 800415e:	7cfb      	ldrb	r3, [r7, #19]
+ 8004160:	e009      	b.n	8004176 <mqtt_net_read_cb+0x44>
 	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
- 8004154:	f7fc ff3c 	bl	8000fd0 <xTaskGetTickCount>
- 8004158:	4602      	mov	r2, r0
- 800415a:	697b      	ldr	r3, [r7, #20]
- 800415c:	1ad2      	subs	r2, r2, r3
- 800415e:	683b      	ldr	r3, [r7, #0]
- 8004160:	429a      	cmp	r2, r3
- 8004162:	d8f1      	bhi.n	8004148 <mqtt_net_read_cb+0x16>
+ 8004162:	f7fc ff35 	bl	8000fd0 <xTaskGetTickCount>
+ 8004166:	4602      	mov	r2, r0
+ 8004168:	697b      	ldr	r3, [r7, #20]
+ 800416a:	1ad2      	subs	r2, r2, r3
+ 800416c:	683b      	ldr	r3, [r7, #0]
+ 800416e:	429a      	cmp	r2, r3
+ 8004170:	d8ea      	bhi.n	8004148 <mqtt_net_read_cb+0x16>
+		}
 	}
-	return 1;
- 8004164:	2301      	movs	r3, #1
+	return -1;
+ 8004172:	f04f 33ff 	mov.w	r3, #4294967295	; 0xffffffff
 }
- 8004166:	4618      	mov	r0, r3
- 8004168:	3718      	adds	r7, #24
- 800416a:	46bd      	mov	sp, r7
- 800416c:	bd80      	pop	{r7, pc}
+ 8004176:	4618      	mov	r0, r3
+ 8004178:	3718      	adds	r7, #24
+ 800417a:	46bd      	mov	sp, r7
+ 800417c:	bd80      	pop	{r7, pc}
 
-0800416e <mqtt_net_write_cb>:
+0800417e <mqtt_net_write_cb>:
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
- 800416e:	b580      	push	{r7, lr}
- 8004170:	b084      	sub	sp, #16
- 8004172:	af00      	add	r7, sp, #0
- 8004174:	60f8      	str	r0, [r7, #12]
- 8004176:	60b9      	str	r1, [r7, #8]
- 8004178:	607a      	str	r2, [r7, #4]
- 800417a:	603b      	str	r3, [r7, #0]
+ 800417e:	b580      	push	{r7, lr}
+ 8004180:	b084      	sub	sp, #16
+ 8004182:	af00      	add	r7, sp, #0
+ 8004184:	60f8      	str	r0, [r7, #12]
+ 8004186:	60b9      	str	r1, [r7, #8]
+ 8004188:	607a      	str	r2, [r7, #4]
+ 800418a:	603b      	str	r3, [r7, #0]
 	l3_send_packet(0, (uint8_t*) buf, buf_len);
- 800417c:	687b      	ldr	r3, [r7, #4]
- 800417e:	b2db      	uxtb	r3, r3
- 8004180:	461a      	mov	r2, r3
- 8004182:	68b9      	ldr	r1, [r7, #8]
- 8004184:	2000      	movs	r0, #0
- 8004186:	f7ff f8e5 	bl	8003354 <l3_send_packet>
+ 800418c:	687b      	ldr	r3, [r7, #4]
+ 800418e:	b2db      	uxtb	r3, r3
+ 8004190:	461a      	mov	r2, r3
+ 8004192:	68b9      	ldr	r1, [r7, #8]
+ 8004194:	2000      	movs	r0, #0
+ 8004196:	f7ff f8dd 	bl	8003354 <l3_send_packet>
 	return 1;
- 800418a:	2301      	movs	r3, #1
+ 800419a:	2301      	movs	r3, #1
 }
- 800418c:	4618      	mov	r0, r3
- 800418e:	3710      	adds	r7, #16
- 8004190:	46bd      	mov	sp, r7
- 8004192:	bd80      	pop	{r7, pc}
+ 800419c:	4618      	mov	r0, r3
+ 800419e:	3710      	adds	r7, #16
+ 80041a0:	46bd      	mov	sp, r7
+ 80041a2:	bd80      	pop	{r7, pc}
 
-08004194 <mqtt_net_disconnect_cb>:
+080041a4 <mqtt_net_disconnect_cb>:
 
 int mqtt_net_disconnect_cb(void *context){
- 8004194:	b480      	push	{r7}
- 8004196:	b083      	sub	sp, #12
- 8004198:	af00      	add	r7, sp, #0
- 800419a:	6078      	str	r0, [r7, #4]
+ 80041a4:	b480      	push	{r7}
+ 80041a6:	b083      	sub	sp, #12
+ 80041a8:	af00      	add	r7, sp, #0
+ 80041aa:	6078      	str	r0, [r7, #4]
 	return 0;
- 800419c:	2300      	movs	r3, #0
+ 80041ac:	2300      	movs	r3, #0
 }
- 800419e:	4618      	mov	r0, r3
- 80041a0:	370c      	adds	r7, #12
- 80041a2:	46bd      	mov	sp, r7
- 80041a4:	bc80      	pop	{r7}
- 80041a6:	4770      	bx	lr
+ 80041ae:	4618      	mov	r0, r3
+ 80041b0:	370c      	adds	r7, #12
+ 80041b2:	46bd      	mov	sp, r7
+ 80041b4:	bc80      	pop	{r7}
+ 80041b6:	4770      	bx	lr
 
-080041a8 <ThreadCommunication>:
+080041b8 <ThreadCommunication>:
 
 
 
 void  ThreadCommunication ( void * pvParameters )
 {
- 80041a8:	b580      	push	{r7, lr}
- 80041aa:	f5ad 7d0e 	sub.w	sp, sp, #568	; 0x238
- 80041ae:	af04      	add	r7, sp, #16
- 80041b0:	1d3b      	adds	r3, r7, #4
- 80041b2:	6018      	str	r0, [r3, #0]
+ 80041b8:	b580      	push	{r7, lr}
+ 80041ba:	f5ad 7d0e 	sub.w	sp, sp, #568	; 0x238
+ 80041be:	af04      	add	r7, sp, #16
+ 80041c0:	1d3b      	adds	r3, r7, #4
+ 80041c2:	6018      	str	r0, [r3, #0]
 	xQueueSend(logMsgQueue, "communication started", 0);
- 80041b4:	4b77      	ldr	r3, [pc, #476]	; (8004394 <ThreadCommunication+0x1ec>)
- 80041b6:	6818      	ldr	r0, [r3, #0]
- 80041b8:	2300      	movs	r3, #0
- 80041ba:	2200      	movs	r2, #0
- 80041bc:	4976      	ldr	r1, [pc, #472]	; (8004398 <ThreadCommunication+0x1f0>)
- 80041be:	f7fc fa57 	bl	8000670 <xQueueGenericSend>
+ 80041c4:	4b77      	ldr	r3, [pc, #476]	; (80043a4 <ThreadCommunication+0x1ec>)
+ 80041c6:	6818      	ldr	r0, [r3, #0]
+ 80041c8:	2300      	movs	r3, #0
+ 80041ca:	2200      	movs	r2, #0
+ 80041cc:	4976      	ldr	r1, [pc, #472]	; (80043a8 <ThreadCommunication+0x1f0>)
+ 80041ce:	f7fc fa4f 	bl	8000670 <xQueueGenericSend>
 
 	vPortEnterCritical();
- 80041c2:	f7fc f91f 	bl	8000404 <vPortEnterCritical>
+ 80041d2:	f7fc f917 	bl	8000404 <vPortEnterCritical>
 	nrf24_init();
- 80041c6:	f7ff f9f9 	bl	80035bc <nrf24_init>
+ 80041d6:	f7ff f9f1 	bl	80035bc <nrf24_init>
 	nRF24_restore_defaults();
- 80041ca:	f7ff f99a 	bl	8003502 <nRF24_restore_defaults>
+ 80041da:	f7ff f992 	bl	8003502 <nRF24_restore_defaults>
 	vPortExitCritical();
- 80041ce:	f7fc f931 	bl	8000434 <vPortExitCritical>
+ 80041de:	f7fc f929 	bl	8000434 <vPortExitCritical>
 	gpio_init();
- 80041d2:	f7ff fcab 	bl	8003b2c <gpio_init>
+ 80041e2:	f7ff fca3 	bl	8003b2c <gpio_init>
 
 	/* Channel #2 , payload length: 4 */
 	const uint8_t channel = 2;
- 80041d6:	2302      	movs	r3, #2
- 80041d8:	f887 3227 	strb.w	r3, [r7, #551]	; 0x227
+ 80041e6:	2302      	movs	r3, #2
+ 80041e8:	f887 3227 	strb.w	r3, [r7, #551]	; 0x227
 	const uint8_t payload_len = 32;
- 80041dc:	2320      	movs	r3, #32
- 80041de:	f887 3226 	strb.w	r3, [r7, #550]	; 0x226
+ 80041ec:	2320      	movs	r3, #32
+ 80041ee:	f887 3226 	strb.w	r3, [r7, #550]	; 0x226
 	nrf24_config(channel, payload_len);
- 80041e2:	f897 2226 	ldrb.w	r2, [r7, #550]	; 0x226
- 80041e6:	f897 3227 	ldrb.w	r3, [r7, #551]	; 0x227
- 80041ea:	4611      	mov	r1, r2
- 80041ec:	4618      	mov	r0, r3
- 80041ee:	f7ff fa21 	bl	8003634 <nrf24_config>
+ 80041f2:	f897 2226 	ldrb.w	r2, [r7, #550]	; 0x226
+ 80041f6:	f897 3227 	ldrb.w	r3, [r7, #551]	; 0x227
+ 80041fa:	4611      	mov	r1, r2
+ 80041fc:	4618      	mov	r0, r3
+ 80041fe:	f7ff fa19 	bl	8003634 <nrf24_config>
 	uint8_t rx_address[5] = {0xD7,0xD7,0xD7,0xD7,0xD7};
- 80041f2:	4a6a      	ldr	r2, [pc, #424]	; (800439c <ThreadCommunication+0x1f4>)
- 80041f4:	f507 7305 	add.w	r3, r7, #532	; 0x214
- 80041f8:	e892 0003 	ldmia.w	r2, {r0, r1}
- 80041fc:	6018      	str	r0, [r3, #0]
- 80041fe:	3304      	adds	r3, #4
- 8004200:	7019      	strb	r1, [r3, #0]
-	uint8_t tx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
- 8004202:	4a67      	ldr	r2, [pc, #412]	; (80043a0 <ThreadCommunication+0x1f8>)
- 8004204:	f507 7303 	add.w	r3, r7, #524	; 0x20c
+ 8004202:	4a6a      	ldr	r2, [pc, #424]	; (80043ac <ThreadCommunication+0x1f4>)
+ 8004204:	f507 7305 	add.w	r3, r7, #532	; 0x214
  8004208:	e892 0003 	ldmia.w	r2, {r0, r1}
  800420c:	6018      	str	r0, [r3, #0]
  800420e:	3304      	adds	r3, #4
  8004210:	7019      	strb	r1, [r3, #0]
+	uint8_t tx_address[5] = {0xE7,0xE7,0xE7,0xE7,0xE7};
+ 8004212:	4a67      	ldr	r2, [pc, #412]	; (80043b0 <ThreadCommunication+0x1f8>)
+ 8004214:	f507 7303 	add.w	r3, r7, #524	; 0x20c
+ 8004218:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800421c:	6018      	str	r0, [r3, #0]
+ 800421e:	3304      	adds	r3, #4
+ 8004220:	7019      	strb	r1, [r3, #0]
 	/* Set the device addresses */
 	nrf24_tx_address(tx_address);
- 8004212:	f507 7303 	add.w	r3, r7, #524	; 0x20c
- 8004216:	4618      	mov	r0, r3
- 8004218:	f7ff fa69 	bl	80036ee <nrf24_tx_address>
+ 8004222:	f507 7303 	add.w	r3, r7, #524	; 0x20c
+ 8004226:	4618      	mov	r0, r3
+ 8004228:	f7ff fa61 	bl	80036ee <nrf24_tx_address>
 	nrf24_rx_address(rx_address);
- 800421c:	f507 7305 	add.w	r3, r7, #532	; 0x214
- 8004220:	4618      	mov	r0, r3
- 8004222:	f7ff fa51 	bl	80036c8 <nrf24_rx_address>
+ 800422c:	f507 7305 	add.w	r3, r7, #532	; 0x214
+ 8004230:	4618      	mov	r0, r3
+ 8004232:	f7ff fa49 	bl	80036c8 <nrf24_rx_address>
 
 
 
 	MqttNet net;
 	MqttClient client;
 	net.connect = mqt_net_connect_cb;
- 8004226:	4b5f      	ldr	r3, [pc, #380]	; (80043a4 <ThreadCommunication+0x1fc>)
- 8004228:	f8c7 31fc 	str.w	r3, [r7, #508]	; 0x1fc
+ 8004236:	4b5f      	ldr	r3, [pc, #380]	; (80043b4 <ThreadCommunication+0x1fc>)
+ 8004238:	f8c7 31fc 	str.w	r3, [r7, #508]	; 0x1fc
 	net.read = mqtt_net_read_cb;
- 800422c:	4b5e      	ldr	r3, [pc, #376]	; (80043a8 <ThreadCommunication+0x200>)
- 800422e:	f8c7 3200 	str.w	r3, [r7, #512]	; 0x200
+ 800423c:	4b5e      	ldr	r3, [pc, #376]	; (80043b8 <ThreadCommunication+0x200>)
+ 800423e:	f8c7 3200 	str.w	r3, [r7, #512]	; 0x200
 	net.write = mqtt_net_write_cb;
- 8004232:	4b5e      	ldr	r3, [pc, #376]	; (80043ac <ThreadCommunication+0x204>)
- 8004234:	f8c7 3204 	str.w	r3, [r7, #516]	; 0x204
+ 8004242:	4b5e      	ldr	r3, [pc, #376]	; (80043bc <ThreadCommunication+0x204>)
+ 8004244:	f8c7 3204 	str.w	r3, [r7, #516]	; 0x204
 	net.disconnect = mqtt_net_disconnect_cb;
- 8004238:	4b5d      	ldr	r3, [pc, #372]	; (80043b0 <ThreadCommunication+0x208>)
- 800423a:	f8c7 3208 	str.w	r3, [r7, #520]	; 0x208
+ 8004248:	4b5d      	ldr	r3, [pc, #372]	; (80043c0 <ThreadCommunication+0x208>)
+ 800424a:	f8c7 3208 	str.w	r3, [r7, #520]	; 0x208
 
 	uint8_t tx_buf[BUF_SIZE_TX];
 	uint8_t rx_buf[BUF_SIZE_RX];
 	MqttClient_Init(&client, &net, mqtt_message_cb, tx_buf, BUF_SIZE_TX, rx_buf, BUF_SIZE_RX, CMD_TIMEOUT_MS);
- 800423e:	f507 7286 	add.w	r2, r7, #268	; 0x10c
- 8004242:	f507 71fc 	add.w	r1, r7, #504	; 0x1f8
- 8004246:	f507 70c6 	add.w	r0, r7, #396	; 0x18c
- 800424a:	f44f 7396 	mov.w	r3, #300	; 0x12c
- 800424e:	9303      	str	r3, [sp, #12]
- 8004250:	2380      	movs	r3, #128	; 0x80
- 8004252:	9302      	str	r3, [sp, #8]
- 8004254:	f107 038c 	add.w	r3, r7, #140	; 0x8c
- 8004258:	9301      	str	r3, [sp, #4]
- 800425a:	2380      	movs	r3, #128	; 0x80
- 800425c:	9300      	str	r3, [sp, #0]
- 800425e:	4613      	mov	r3, r2
- 8004260:	4a54      	ldr	r2, [pc, #336]	; (80043b4 <ThreadCommunication+0x20c>)
- 8004262:	f7fd fe5f 	bl	8001f24 <MqttClient_Init>
+ 800424e:	f507 7286 	add.w	r2, r7, #268	; 0x10c
+ 8004252:	f507 71fc 	add.w	r1, r7, #504	; 0x1f8
+ 8004256:	f507 70c6 	add.w	r0, r7, #396	; 0x18c
+ 800425a:	f44f 732f 	mov.w	r3, #700	; 0x2bc
+ 800425e:	9303      	str	r3, [sp, #12]
+ 8004260:	2380      	movs	r3, #128	; 0x80
+ 8004262:	9302      	str	r3, [sp, #8]
+ 8004264:	f107 038c 	add.w	r3, r7, #140	; 0x8c
+ 8004268:	9301      	str	r3, [sp, #4]
+ 800426a:	2380      	movs	r3, #128	; 0x80
+ 800426c:	9300      	str	r3, [sp, #0]
+ 800426e:	4613      	mov	r3, r2
+ 8004270:	4a54      	ldr	r2, [pc, #336]	; (80043c4 <ThreadCommunication+0x20c>)
+ 8004272:	f7fd fe57 	bl	8001f24 <MqttClient_Init>
 
 	MqttConnect mqtt_con;
 	mqtt_con.clean_session =0;
- 8004266:	f107 036c 	add.w	r3, r7, #108	; 0x6c
- 800426a:	2200      	movs	r2, #0
- 800426c:	711a      	strb	r2, [r3, #4]
-	mqtt_con.client_id = "rt1";
- 800426e:	f107 036c 	add.w	r3, r7, #108	; 0x6c
- 8004272:	4a51      	ldr	r2, [pc, #324]	; (80043b8 <ThreadCommunication+0x210>)
- 8004274:	609a      	str	r2, [r3, #8]
-	mqtt_con.enable_lwt = 0;
  8004276:	f107 036c 	add.w	r3, r7, #108	; 0x6c
  800427a:	2200      	movs	r2, #0
- 800427c:	731a      	strb	r2, [r3, #12]
-	mqtt_con.keep_alive_sec =30;
+ 800427c:	711a      	strb	r2, [r3, #4]
+	mqtt_con.client_id = "rt1";
  800427e:	f107 036c 	add.w	r3, r7, #108	; 0x6c
- 8004282:	221e      	movs	r2, #30
- 8004284:	805a      	strh	r2, [r3, #2]
-	mqtt_con.stat = MQTT_MSG_BEGIN;
+ 8004282:	4a51      	ldr	r2, [pc, #324]	; (80043c8 <ThreadCommunication+0x210>)
+ 8004284:	609a      	str	r2, [r3, #8]
+	mqtt_con.enable_lwt = 0;
  8004286:	f107 036c 	add.w	r3, r7, #108	; 0x6c
  800428a:	2200      	movs	r2, #0
- 800428c:	701a      	strb	r2, [r3, #0]
-	mqtt_con.username ="bedroomTMP1";
+ 800428c:	731a      	strb	r2, [r3, #12]
+	mqtt_con.keep_alive_sec =30;
  800428e:	f107 036c 	add.w	r3, r7, #108	; 0x6c
- 8004292:	4a4a      	ldr	r2, [pc, #296]	; (80043bc <ThreadCommunication+0x214>)
- 8004294:	615a      	str	r2, [r3, #20]
-	mqtt_con.password = "passw0rd";
+ 8004292:	221e      	movs	r2, #30
+ 8004294:	805a      	strh	r2, [r3, #2]
+	mqtt_con.stat = MQTT_MSG_BEGIN;
  8004296:	f107 036c 	add.w	r3, r7, #108	; 0x6c
- 800429a:	4a49      	ldr	r2, [pc, #292]	; (80043c0 <ThreadCommunication+0x218>)
- 800429c:	619a      	str	r2, [r3, #24]
+ 800429a:	2200      	movs	r2, #0
+ 800429c:	701a      	strb	r2, [r3, #0]
+	mqtt_con.username ="bedroomTMP1";
+ 800429e:	f107 036c 	add.w	r3, r7, #108	; 0x6c
+ 80042a2:	4a4a      	ldr	r2, [pc, #296]	; (80043cc <ThreadCommunication+0x214>)
+ 80042a4:	615a      	str	r2, [r3, #20]
+	mqtt_con.password = "passw0rd";
+ 80042a6:	f107 036c 	add.w	r3, r7, #108	; 0x6c
+ 80042aa:	4a49      	ldr	r2, [pc, #292]	; (80043d0 <ThreadCommunication+0x218>)
+ 80042ac:	619a      	str	r2, [r3, #24]
 	MqttClient_Connect(&client, &mqtt_con);
- 800429e:	f107 026c 	add.w	r2, r7, #108	; 0x6c
- 80042a2:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
- 80042a6:	4611      	mov	r1, r2
- 80042a8:	4618      	mov	r0, r3
- 80042aa:	f7fd fe77 	bl	8001f9c <MqttClient_Connect>
+ 80042ae:	f107 026c 	add.w	r2, r7, #108	; 0x6c
+ 80042b2:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
+ 80042b6:	4611      	mov	r1, r2
+ 80042b8:	4618      	mov	r0, r3
+ 80042ba:	f7fd fe6f 	bl	8001f9c <MqttClient_Connect>
 
 	xQueueSend(logMsgQueue, "client connected", 0);
- 80042ae:	4b39      	ldr	r3, [pc, #228]	; (8004394 <ThreadCommunication+0x1ec>)
- 80042b0:	6818      	ldr	r0, [r3, #0]
- 80042b2:	2300      	movs	r3, #0
- 80042b4:	2200      	movs	r2, #0
- 80042b6:	4943      	ldr	r1, [pc, #268]	; (80043c4 <ThreadCommunication+0x21c>)
- 80042b8:	f7fc f9da 	bl	8000670 <xQueueGenericSend>
+ 80042be:	4b39      	ldr	r3, [pc, #228]	; (80043a4 <ThreadCommunication+0x1ec>)
+ 80042c0:	6818      	ldr	r0, [r3, #0]
+ 80042c2:	2300      	movs	r3, #0
+ 80042c4:	2200      	movs	r2, #0
+ 80042c6:	4943      	ldr	r1, [pc, #268]	; (80043d4 <ThreadCommunication+0x21c>)
+ 80042c8:	f7fc f9d2 	bl	8000670 <xQueueGenericSend>
 
 	const char* test_topic1 = "flat/livingroom/temp/1";
- 80042bc:	4b42      	ldr	r3, [pc, #264]	; (80043c8 <ThreadCommunication+0x220>)
- 80042be:	f8c7 3220 	str.w	r3, [r7, #544]	; 0x220
+ 80042cc:	4b42      	ldr	r3, [pc, #264]	; (80043d8 <ThreadCommunication+0x220>)
+ 80042ce:	f8c7 3220 	str.w	r3, [r7, #544]	; 0x220
 	const char* test_topic2 = "flat/bedroom/humidity/2";
- 80042c2:	4b42      	ldr	r3, [pc, #264]	; (80043cc <ThreadCommunication+0x224>)
- 80042c4:	f8c7 321c 	str.w	r3, [r7, #540]	; 0x21c
+ 80042d2:	4b42      	ldr	r3, [pc, #264]	; (80043dc <ThreadCommunication+0x224>)
+ 80042d4:	f8c7 321c 	str.w	r3, [r7, #540]	; 0x21c
 	MqttTopic topics[2];
 	topics[0].qos =1;
- 80042c8:	f107 035c 	add.w	r3, r7, #92	; 0x5c
- 80042cc:	2201      	movs	r2, #1
- 80042ce:	711a      	strb	r2, [r3, #4]
+ 80042d8:	f107 035c 	add.w	r3, r7, #92	; 0x5c
+ 80042dc:	2201      	movs	r2, #1
+ 80042de:	711a      	strb	r2, [r3, #4]
 	topics[0].topic_filter = test_topic1;
- 80042d0:	f107 035c 	add.w	r3, r7, #92	; 0x5c
- 80042d4:	f8d7 2220 	ldr.w	r2, [r7, #544]	; 0x220
- 80042d8:	601a      	str	r2, [r3, #0]
+ 80042e0:	f107 035c 	add.w	r3, r7, #92	; 0x5c
+ 80042e4:	f8d7 2220 	ldr.w	r2, [r7, #544]	; 0x220
+ 80042e8:	601a      	str	r2, [r3, #0]
     topics[1].qos =1;
- 80042da:	f107 035c 	add.w	r3, r7, #92	; 0x5c
- 80042de:	2201      	movs	r2, #1
- 80042e0:	731a      	strb	r2, [r3, #12]
+ 80042ea:	f107 035c 	add.w	r3, r7, #92	; 0x5c
+ 80042ee:	2201      	movs	r2, #1
+ 80042f0:	731a      	strb	r2, [r3, #12]
 	topics[1].topic_filter = test_topic2;
- 80042e2:	f107 035c 	add.w	r3, r7, #92	; 0x5c
- 80042e6:	f8d7 221c 	ldr.w	r2, [r7, #540]	; 0x21c
- 80042ea:	609a      	str	r2, [r3, #8]
+ 80042f2:	f107 035c 	add.w	r3, r7, #92	; 0x5c
+ 80042f6:	f8d7 221c 	ldr.w	r2, [r7, #540]	; 0x21c
+ 80042fa:	609a      	str	r2, [r3, #8]
 
 
 	MqttSubscribe subscribe;
 	subscribe.packet_id = 1;
- 80042ec:	f107 0350 	add.w	r3, r7, #80	; 0x50
- 80042f0:	2201      	movs	r2, #1
- 80042f2:	805a      	strh	r2, [r3, #2]
+ 80042fc:	f107 0350 	add.w	r3, r7, #80	; 0x50
+ 8004300:	2201      	movs	r2, #1
+ 8004302:	805a      	strh	r2, [r3, #2]
 	uint8_t topic_count = 2;
- 80042f4:	2302      	movs	r3, #2
- 80042f6:	f887 321b 	strb.w	r3, [r7, #539]	; 0x21b
+ 8004304:	2302      	movs	r3, #2
+ 8004306:	f887 321b 	strb.w	r3, [r7, #539]	; 0x21b
 	subscribe.topic_count = topic_count;
- 80042fa:	f897 221b 	ldrb.w	r2, [r7, #539]	; 0x21b
- 80042fe:	f107 0350 	add.w	r3, r7, #80	; 0x50
- 8004302:	605a      	str	r2, [r3, #4]
+ 800430a:	f897 221b 	ldrb.w	r2, [r7, #539]	; 0x21b
+ 800430e:	f107 0350 	add.w	r3, r7, #80	; 0x50
+ 8004312:	605a      	str	r2, [r3, #4]
 	subscribe.topics = topics;
- 8004304:	f107 0350 	add.w	r3, r7, #80	; 0x50
- 8004308:	f107 025c 	add.w	r2, r7, #92	; 0x5c
- 800430c:	609a      	str	r2, [r3, #8]
+ 8004314:	f107 0350 	add.w	r3, r7, #80	; 0x50
+ 8004318:	f107 025c 	add.w	r2, r7, #92	; 0x5c
+ 800431c:	609a      	str	r2, [r3, #8]
 
 	MqttClient_Subscribe(&client, &subscribe);
- 800430e:	f107 0250 	add.w	r2, r7, #80	; 0x50
- 8004312:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
- 8004316:	4611      	mov	r1, r2
- 8004318:	4618      	mov	r0, r3
- 800431a:	f7fd ff3b 	bl	8002194 <MqttClient_Subscribe>
+ 800431e:	f107 0250 	add.w	r2, r7, #80	; 0x50
+ 8004322:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
+ 8004326:	4611      	mov	r1, r2
+ 8004328:	4618      	mov	r0, r3
+ 800432a:	f7fd ff33 	bl	8002194 <MqttClient_Subscribe>
 	xQueueSend(logMsgQueue, "client subsribe", 0);
- 800431e:	4b1d      	ldr	r3, [pc, #116]	; (8004394 <ThreadCommunication+0x1ec>)
- 8004320:	6818      	ldr	r0, [r3, #0]
- 8004322:	2300      	movs	r3, #0
- 8004324:	2200      	movs	r2, #0
- 8004326:	492a      	ldr	r1, [pc, #168]	; (80043d0 <ThreadCommunication+0x228>)
- 8004328:	f7fc f9a2 	bl	8000670 <xQueueGenericSend>
+ 800432e:	4b1d      	ldr	r3, [pc, #116]	; (80043a4 <ThreadCommunication+0x1ec>)
+ 8004330:	6818      	ldr	r0, [r3, #0]
+ 8004332:	2300      	movs	r3, #0
+ 8004334:	2200      	movs	r2, #0
+ 8004336:	492a      	ldr	r1, [pc, #168]	; (80043e0 <ThreadCommunication+0x228>)
+ 8004338:	f7fc f99a 	bl	8000670 <xQueueGenericSend>
 //		if (!(IsGpioHigh(GPIOB, 11))){
 //			MqttClient_Connect(&client, &mqtt_con);
 //			GPIOC->ODR ^= GPIO_Pin_13;
 //		}
 
 		MqttClient_WaitMessage(&client,100);
- 800432c:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
- 8004330:	2164      	movs	r1, #100	; 0x64
- 8004332:	4618      	mov	r0, r3
- 8004334:	f7fd ff91 	bl	800225a <MqttClient_WaitMessage>
+ 800433c:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
+ 8004340:	2164      	movs	r1, #100	; 0x64
+ 8004342:	4618      	mov	r0, r3
+ 8004344:	f7fd ff89 	bl	800225a <MqttClient_WaitMessage>
 
 
 
 
 		msgDataExt_t messageExt;
 		if (xQueueReceive(externalMsgQueue, &messageExt, 0)){
- 8004338:	4b26      	ldr	r3, [pc, #152]	; (80043d4 <ThreadCommunication+0x22c>)
- 800433a:	6818      	ldr	r0, [r3, #0]
- 800433c:	f107 0108 	add.w	r1, r7, #8
- 8004340:	2300      	movs	r3, #0
- 8004342:	2200      	movs	r2, #0
- 8004344:	f7fc fa3e 	bl	80007c4 <xQueueGenericReceive>
- 8004348:	4603      	mov	r3, r0
- 800434a:	2b00      	cmp	r3, #0
- 800434c:	d01c      	beq.n	8004388 <ThreadCommunication+0x1e0>
+ 8004348:	4b26      	ldr	r3, [pc, #152]	; (80043e4 <ThreadCommunication+0x22c>)
+ 800434a:	6818      	ldr	r0, [r3, #0]
+ 800434c:	f107 0108 	add.w	r1, r7, #8
+ 8004350:	2300      	movs	r3, #0
+ 8004352:	2200      	movs	r2, #0
+ 8004354:	f7fc fa36 	bl	80007c4 <xQueueGenericReceive>
+ 8004358:	4603      	mov	r3, r0
+ 800435a:	2b00      	cmp	r3, #0
+ 800435c:	d01c      	beq.n	8004398 <ThreadCommunication+0x1e0>
 
 			MqttPublish publishPckt;
 			switch (messageExt.type){
- 800434e:	f107 0308 	add.w	r3, r7, #8
- 8004352:	7e5b      	ldrb	r3, [r3, #25]
- 8004354:	2b00      	cmp	r3, #0
- 8004356:	d10f      	bne.n	8004378 <ThreadCommunication+0x1d0>
+ 800435e:	f107 0308 	add.w	r3, r7, #8
+ 8004362:	7e5b      	ldrb	r3, [r3, #25]
+ 8004364:	2b00      	cmp	r3, #0
+ 8004366:	d10f      	bne.n	8004388 <ThreadCommunication+0x1d0>
 			case lightLevel:
 				publishPckt.topic_name = test_topic1;
- 8004358:	f107 0328 	add.w	r3, r7, #40	; 0x28
- 800435c:	f8d7 2220 	ldr.w	r2, [r7, #544]	; 0x220
- 8004360:	609a      	str	r2, [r3, #8]
+ 8004368:	f107 0328 	add.w	r3, r7, #40	; 0x28
+ 800436c:	f8d7 2220 	ldr.w	r2, [r7, #544]	; 0x220
+ 8004370:	609a      	str	r2, [r3, #8]
 				publishPckt.topic_name_len = sizeof(test_topic1);
- 8004362:	f107 0328 	add.w	r3, r7, #40	; 0x28
- 8004366:	2204      	movs	r2, #4
- 8004368:	819a      	strh	r2, [r3, #12]
+ 8004372:	f107 0328 	add.w	r3, r7, #40	; 0x28
+ 8004376:	2204      	movs	r2, #4
+ 8004378:	819a      	strh	r2, [r3, #12]
 				xQueueSend(logMsgQueue, "light msg rcv", 0);
- 800436a:	4b0a      	ldr	r3, [pc, #40]	; (8004394 <ThreadCommunication+0x1ec>)
- 800436c:	6818      	ldr	r0, [r3, #0]
- 800436e:	2300      	movs	r3, #0
- 8004370:	2200      	movs	r2, #0
- 8004372:	4919      	ldr	r1, [pc, #100]	; (80043d8 <ThreadCommunication+0x230>)
- 8004374:	f7fc f97c 	bl	8000670 <xQueueGenericSend>
+ 800437a:	4b0a      	ldr	r3, [pc, #40]	; (80043a4 <ThreadCommunication+0x1ec>)
+ 800437c:	6818      	ldr	r0, [r3, #0]
+ 800437e:	2300      	movs	r3, #0
+ 8004380:	2200      	movs	r2, #0
+ 8004382:	4919      	ldr	r1, [pc, #100]	; (80043e8 <ThreadCommunication+0x230>)
+ 8004384:	f7fc f974 	bl	8000670 <xQueueGenericSend>
 			}
 
 
 			 MqttClient_Publish(&client, &publishPckt);
- 8004378:	f107 0228 	add.w	r2, r7, #40	; 0x28
- 800437c:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
- 8004380:	4611      	mov	r1, r2
- 8004382:	4618      	mov	r0, r3
- 8004384:	f7fd fe52 	bl	800202c <MqttClient_Publish>
+ 8004388:	f107 0228 	add.w	r2, r7, #40	; 0x28
+ 800438c:	f507 73c6 	add.w	r3, r7, #396	; 0x18c
+ 8004390:	4611      	mov	r1, r2
+ 8004392:	4618      	mov	r0, r3
+ 8004394:	f7fd fe4a 	bl	800202c <MqttClient_Publish>
 		}
 
 		//poll sevrer b ping and inform supervisor about broken connection
 		vTaskDelay(1000);
- 8004388:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 800438c:	f7fc fd28 	bl	8000de0 <vTaskDelay>
+ 8004398:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
+ 800439c:	f7fc fd20 	bl	8000de0 <vTaskDelay>
 	for (;;) {
- 8004390:	e7cc      	b.n	800432c <ThreadCommunication+0x184>
- 8004392:	bf00      	nop
- 8004394:	20000198 	.word	0x20000198
- 8004398:	08004724 	.word	0x08004724
- 800439c:	080047bc 	.word	0x080047bc
- 80043a0:	080047c4 	.word	0x080047c4
- 80043a4:	08004117 	.word	0x08004117
- 80043a8:	08004133 	.word	0x08004133
- 80043ac:	0800416f 	.word	0x0800416f
- 80043b0:	08004195 	.word	0x08004195
- 80043b4:	080040f5 	.word	0x080040f5
- 80043b8:	0800473c 	.word	0x0800473c
- 80043bc:	08004740 	.word	0x08004740
- 80043c0:	0800474c 	.word	0x0800474c
- 80043c4:	08004758 	.word	0x08004758
- 80043c8:	0800476c 	.word	0x0800476c
- 80043cc:	08004784 	.word	0x08004784
- 80043d0:	0800479c 	.word	0x0800479c
- 80043d4:	200001a0 	.word	0x200001a0
- 80043d8:	080047ac 	.word	0x080047ac
+ 80043a0:	e7cc      	b.n	800433c <ThreadCommunication+0x184>
+ 80043a2:	bf00      	nop
+ 80043a4:	20000198 	.word	0x20000198
+ 80043a8:	08004734 	.word	0x08004734
+ 80043ac:	080047cc 	.word	0x080047cc
+ 80043b0:	080047d4 	.word	0x080047d4
+ 80043b4:	08004117 	.word	0x08004117
+ 80043b8:	08004133 	.word	0x08004133
+ 80043bc:	0800417f 	.word	0x0800417f
+ 80043c0:	080041a5 	.word	0x080041a5
+ 80043c4:	080040f5 	.word	0x080040f5
+ 80043c8:	0800474c 	.word	0x0800474c
+ 80043cc:	08004750 	.word	0x08004750
+ 80043d0:	0800475c 	.word	0x0800475c
+ 80043d4:	08004768 	.word	0x08004768
+ 80043d8:	0800477c 	.word	0x0800477c
+ 80043dc:	08004794 	.word	0x08004794
+ 80043e0:	080047ac 	.word	0x080047ac
+ 80043e4:	200001a0 	.word	0x200001a0
+ 80043e8:	080047bc 	.word	0x080047bc
 
-080043dc <ThreadServiceMode>:
+080043ec <ThreadServiceMode>:
 extern QueueHandle_t logMsgQueue;
 
 
 
 void ThreadServiceMode ( void * pvParameters )
 {
- 80043dc:	b580      	push	{r7, lr}
- 80043de:	b08a      	sub	sp, #40	; 0x28
- 80043e0:	af00      	add	r7, sp, #0
- 80043e2:	6078      	str	r0, [r7, #4]
+ 80043ec:	b580      	push	{r7, lr}
+ 80043ee:	b08a      	sub	sp, #40	; 0x28
+ 80043f0:	af00      	add	r7, sp, #0
+ 80043f2:	6078      	str	r0, [r7, #4]
 	xQueueSend(logMsgQueue, "serviceMode started", 0);
- 80043e4:	4b0b      	ldr	r3, [pc, #44]	; (8004414 <ThreadServiceMode+0x38>)
- 80043e6:	6818      	ldr	r0, [r3, #0]
- 80043e8:	2300      	movs	r3, #0
- 80043ea:	2200      	movs	r2, #0
- 80043ec:	490a      	ldr	r1, [pc, #40]	; (8004418 <ThreadServiceMode+0x3c>)
- 80043ee:	f7fc f93f 	bl	8000670 <xQueueGenericSend>
+ 80043f4:	4b0b      	ldr	r3, [pc, #44]	; (8004424 <ThreadServiceMode+0x38>)
+ 80043f6:	6818      	ldr	r0, [r3, #0]
+ 80043f8:	2300      	movs	r3, #0
+ 80043fa:	2200      	movs	r2, #0
+ 80043fc:	490a      	ldr	r1, [pc, #40]	; (8004428 <ThreadServiceMode+0x3c>)
+ 80043fe:	f7fc f937 	bl	8000670 <xQueueGenericSend>
 
 	for (;;) {
 		char commandBuff[MAX_CMD_SIZE];
 		if (xQueueReceive(logMsgQueue, &commandBuff, MAX_CMD_SIZE)){
- 80043f2:	4b08      	ldr	r3, [pc, #32]	; (8004414 <ThreadServiceMode+0x38>)
- 80043f4:	6818      	ldr	r0, [r3, #0]
- 80043f6:	f107 0108 	add.w	r1, r7, #8
- 80043fa:	2300      	movs	r3, #0
- 80043fc:	2220      	movs	r2, #32
- 80043fe:	f7fc f9e1 	bl	80007c4 <xQueueGenericReceive>
- 8004402:	4603      	mov	r3, r0
- 8004404:	2b00      	cmp	r3, #0
- 8004406:	d0f4      	beq.n	80043f2 <ThreadServiceMode+0x16>
+ 8004402:	4b08      	ldr	r3, [pc, #32]	; (8004424 <ThreadServiceMode+0x38>)
+ 8004404:	6818      	ldr	r0, [r3, #0]
+ 8004406:	f107 0108 	add.w	r1, r7, #8
+ 800440a:	2300      	movs	r3, #0
+ 800440c:	2220      	movs	r2, #32
+ 800440e:	f7fc f9d9 	bl	80007c4 <xQueueGenericReceive>
+ 8004412:	4603      	mov	r3, r0
+ 8004414:	2b00      	cmp	r3, #0
+ 8004416:	d0f4      	beq.n	8004402 <ThreadServiceMode+0x16>
 			SendString(commandBuff);
- 8004408:	f107 0308 	add.w	r3, r7, #8
- 800440c:	4618      	mov	r0, r3
- 800440e:	f7ff fc6b 	bl	8003ce8 <SendString>
+ 8004418:	f107 0308 	add.w	r3, r7, #8
+ 800441c:	4618      	mov	r0, r3
+ 800441e:	f7ff fc63 	bl	8003ce8 <SendString>
 	for (;;) {
- 8004412:	e7ee      	b.n	80043f2 <ThreadServiceMode+0x16>
- 8004414:	20000198 	.word	0x20000198
- 8004418:	080047cc 	.word	0x080047cc
+ 8004422:	e7ee      	b.n	8004402 <ThreadServiceMode+0x16>
+ 8004424:	20000198 	.word	0x20000198
+ 8004428:	080047dc 	.word	0x080047dc
 
-0800441c <ConvertToExtMsg>:
+0800442c <ConvertToExtMsg>:
 extern QueueHandle_t internalMsgQueue;
 extern QueueHandle_t externalMsgQueue;
 extern QueueHandle_t logMsgQueue;
 
 
 void ConvertToExtMsg(msgDataInt_t * msgDataInt, msgDataExt_t * msgDataExt){
- 800441c:	b580      	push	{r7, lr}
- 800441e:	b082      	sub	sp, #8
- 8004420:	af00      	add	r7, sp, #0
- 8004422:	6078      	str	r0, [r7, #4]
- 8004424:	6039      	str	r1, [r7, #0]
+ 800442c:	b580      	push	{r7, lr}
+ 800442e:	b082      	sub	sp, #8
+ 8004430:	af00      	add	r7, sp, #0
+ 8004432:	6078      	str	r0, [r7, #4]
+ 8004434:	6039      	str	r1, [r7, #0]
 	memcpy(msgDataExt, msgDataInt, sizeof(msgDataInt_t));
- 8004426:	221a      	movs	r2, #26
- 8004428:	6879      	ldr	r1, [r7, #4]
- 800442a:	6838      	ldr	r0, [r7, #0]
- 800442c:	f000 f872 	bl	8004514 <memcpy>
+ 8004436:	221a      	movs	r2, #26
+ 8004438:	6879      	ldr	r1, [r7, #4]
+ 800443a:	6838      	ldr	r0, [r7, #0]
+ 800443c:	f000 f872 	bl	8004524 <memcpy>
 	msgDataExt->timeStamp = getCurrentTime();
- 8004430:	f7ff fd2a 	bl	8003e88 <getCurrentTime>
- 8004434:	4603      	mov	r3, r0
- 8004436:	461a      	mov	r2, r3
- 8004438:	683b      	ldr	r3, [r7, #0]
- 800443a:	61da      	str	r2, [r3, #28]
+ 8004440:	f7ff fd22 	bl	8003e88 <getCurrentTime>
+ 8004444:	4603      	mov	r3, r0
+ 8004446:	461a      	mov	r2, r3
+ 8004448:	683b      	ldr	r3, [r7, #0]
+ 800444a:	61da      	str	r2, [r3, #28]
 
 }
- 800443c:	bf00      	nop
- 800443e:	3708      	adds	r7, #8
- 8004440:	46bd      	mov	sp, r7
- 8004442:	bd80      	pop	{r7, pc}
+ 800444c:	bf00      	nop
+ 800444e:	3708      	adds	r7, #8
+ 8004450:	46bd      	mov	sp, r7
+ 8004452:	bd80      	pop	{r7, pc}
 
-08004444 <ThreadSupervisor>:
+08004454 <ThreadSupervisor>:
 
 
 void ThreadSupervisor ( void * pvParameters )
 {
- 8004444:	b580      	push	{r7, lr}
- 8004446:	b092      	sub	sp, #72	; 0x48
- 8004448:	af00      	add	r7, sp, #0
- 800444a:	6078      	str	r0, [r7, #4]
+ 8004454:	b580      	push	{r7, lr}
+ 8004456:	b092      	sub	sp, #72	; 0x48
+ 8004458:	af00      	add	r7, sp, #0
+ 800445a:	6078      	str	r0, [r7, #4]
 	xQueueSend(logMsgQueue, "supervisor started", 0);
- 800444c:	4b13      	ldr	r3, [pc, #76]	; (800449c <ThreadSupervisor+0x58>)
- 800444e:	6818      	ldr	r0, [r3, #0]
- 8004450:	2300      	movs	r3, #0
- 8004452:	2200      	movs	r2, #0
- 8004454:	4912      	ldr	r1, [pc, #72]	; (80044a0 <ThreadSupervisor+0x5c>)
- 8004456:	f7fc f90b 	bl	8000670 <xQueueGenericSend>
+ 800445c:	4b13      	ldr	r3, [pc, #76]	; (80044ac <ThreadSupervisor+0x58>)
+ 800445e:	6818      	ldr	r0, [r3, #0]
+ 8004460:	2300      	movs	r3, #0
+ 8004462:	2200      	movs	r2, #0
+ 8004464:	4912      	ldr	r1, [pc, #72]	; (80044b0 <ThreadSupervisor+0x5c>)
+ 8004466:	f7fc f903 	bl	8000670 <xQueueGenericSend>
 	for (;;) {
 		//measurements scheduler here
 
 		//parse and send internal data
 		msgDataInt_t messageInt;
 		if (xQueueReceive(internalMsgQueue, &messageInt, 0)){
- 800445a:	4b12      	ldr	r3, [pc, #72]	; (80044a4 <ThreadSupervisor+0x60>)
- 800445c:	6818      	ldr	r0, [r3, #0]
- 800445e:	f107 012c 	add.w	r1, r7, #44	; 0x2c
- 8004462:	2300      	movs	r3, #0
- 8004464:	2200      	movs	r2, #0
- 8004466:	f7fc f9ad 	bl	80007c4 <xQueueGenericReceive>
- 800446a:	4603      	mov	r3, r0
- 800446c:	2b00      	cmp	r3, #0
- 800446e:	d00f      	beq.n	8004490 <ThreadSupervisor+0x4c>
+ 800446a:	4b12      	ldr	r3, [pc, #72]	; (80044b4 <ThreadSupervisor+0x60>)
+ 800446c:	6818      	ldr	r0, [r3, #0]
+ 800446e:	f107 012c 	add.w	r1, r7, #44	; 0x2c
+ 8004472:	2300      	movs	r3, #0
+ 8004474:	2200      	movs	r2, #0
+ 8004476:	f7fc f9a5 	bl	80007c4 <xQueueGenericReceive>
+ 800447a:	4603      	mov	r3, r0
+ 800447c:	2b00      	cmp	r3, #0
+ 800447e:	d00f      	beq.n	80044a0 <ThreadSupervisor+0x4c>
 			msgDataExt_t messageExt;
 			ConvertToExtMsg(&messageInt, &messageExt); //add timestamp instead?
- 8004470:	f107 020c 	add.w	r2, r7, #12
- 8004474:	f107 032c 	add.w	r3, r7, #44	; 0x2c
- 8004478:	4611      	mov	r1, r2
- 800447a:	4618      	mov	r0, r3
- 800447c:	f7ff ffce 	bl	800441c <ConvertToExtMsg>
+ 8004480:	f107 020c 	add.w	r2, r7, #12
+ 8004484:	f107 032c 	add.w	r3, r7, #44	; 0x2c
+ 8004488:	4611      	mov	r1, r2
+ 800448a:	4618      	mov	r0, r3
+ 800448c:	f7ff ffce 	bl	800442c <ConvertToExtMsg>
 			xQueueSend(externalMsgQueue, &messageExt, 0);
- 8004480:	4b09      	ldr	r3, [pc, #36]	; (80044a8 <ThreadSupervisor+0x64>)
- 8004482:	6818      	ldr	r0, [r3, #0]
- 8004484:	f107 010c 	add.w	r1, r7, #12
- 8004488:	2300      	movs	r3, #0
- 800448a:	2200      	movs	r2, #0
- 800448c:	f7fc f8f0 	bl	8000670 <xQueueGenericSend>
+ 8004490:	4b09      	ldr	r3, [pc, #36]	; (80044b8 <ThreadSupervisor+0x64>)
+ 8004492:	6818      	ldr	r0, [r3, #0]
+ 8004494:	f107 010c 	add.w	r1, r7, #12
+ 8004498:	2300      	movs	r3, #0
+ 800449a:	2200      	movs	r2, #0
+ 800449c:	f7fc f8e8 	bl	8000670 <xQueueGenericSend>
 		}
 
 		vTaskDelay(1000);
- 8004490:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 8004494:	f7fc fca4 	bl	8000de0 <vTaskDelay>
+ 80044a0:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
+ 80044a4:	f7fc fc9c 	bl	8000de0 <vTaskDelay>
 	for (;;) {
- 8004498:	e7df      	b.n	800445a <ThreadSupervisor+0x16>
- 800449a:	bf00      	nop
- 800449c:	20000198 	.word	0x20000198
- 80044a0:	080047e0 	.word	0x080047e0
- 80044a4:	2000019c 	.word	0x2000019c
- 80044a8:	200001a0 	.word	0x200001a0
+ 80044a8:	e7df      	b.n	800446a <ThreadSupervisor+0x16>
+ 80044aa:	bf00      	nop
+ 80044ac:	20000198 	.word	0x20000198
+ 80044b0:	080047f0 	.word	0x080047f0
+ 80044b4:	2000019c 	.word	0x2000019c
+ 80044b8:	200001a0 	.word	0x200001a0
 
-080044ac <__libc_init_array>:
- 80044ac:	b570      	push	{r4, r5, r6, lr}
- 80044ae:	2500      	movs	r5, #0
- 80044b0:	4e0c      	ldr	r6, [pc, #48]	; (80044e4 <__libc_init_array+0x38>)
- 80044b2:	4c0d      	ldr	r4, [pc, #52]	; (80044e8 <__libc_init_array+0x3c>)
- 80044b4:	1ba4      	subs	r4, r4, r6
- 80044b6:	10a4      	asrs	r4, r4, #2
- 80044b8:	42a5      	cmp	r5, r4
- 80044ba:	d109      	bne.n	80044d0 <__libc_init_array+0x24>
- 80044bc:	f000 f908 	bl	80046d0 <_init>
- 80044c0:	2500      	movs	r5, #0
- 80044c2:	4e0a      	ldr	r6, [pc, #40]	; (80044ec <__libc_init_array+0x40>)
- 80044c4:	4c0a      	ldr	r4, [pc, #40]	; (80044f0 <__libc_init_array+0x44>)
- 80044c6:	1ba4      	subs	r4, r4, r6
- 80044c8:	10a4      	asrs	r4, r4, #2
- 80044ca:	42a5      	cmp	r5, r4
- 80044cc:	d105      	bne.n	80044da <__libc_init_array+0x2e>
- 80044ce:	bd70      	pop	{r4, r5, r6, pc}
- 80044d0:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
- 80044d4:	4798      	blx	r3
- 80044d6:	3501      	adds	r5, #1
- 80044d8:	e7ee      	b.n	80044b8 <__libc_init_array+0xc>
- 80044da:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
- 80044de:	4798      	blx	r3
- 80044e0:	3501      	adds	r5, #1
- 80044e2:	e7f2      	b.n	80044ca <__libc_init_array+0x1e>
- 80044e4:	080047f4 	.word	0x080047f4
- 80044e8:	080047f4 	.word	0x080047f4
- 80044ec:	080047f4 	.word	0x080047f4
- 80044f0:	080047f8 	.word	0x080047f8
+080044bc <__libc_init_array>:
+ 80044bc:	b570      	push	{r4, r5, r6, lr}
+ 80044be:	2500      	movs	r5, #0
+ 80044c0:	4e0c      	ldr	r6, [pc, #48]	; (80044f4 <__libc_init_array+0x38>)
+ 80044c2:	4c0d      	ldr	r4, [pc, #52]	; (80044f8 <__libc_init_array+0x3c>)
+ 80044c4:	1ba4      	subs	r4, r4, r6
+ 80044c6:	10a4      	asrs	r4, r4, #2
+ 80044c8:	42a5      	cmp	r5, r4
+ 80044ca:	d109      	bne.n	80044e0 <__libc_init_array+0x24>
+ 80044cc:	f000 f908 	bl	80046e0 <_init>
+ 80044d0:	2500      	movs	r5, #0
+ 80044d2:	4e0a      	ldr	r6, [pc, #40]	; (80044fc <__libc_init_array+0x40>)
+ 80044d4:	4c0a      	ldr	r4, [pc, #40]	; (8004500 <__libc_init_array+0x44>)
+ 80044d6:	1ba4      	subs	r4, r4, r6
+ 80044d8:	10a4      	asrs	r4, r4, #2
+ 80044da:	42a5      	cmp	r5, r4
+ 80044dc:	d105      	bne.n	80044ea <__libc_init_array+0x2e>
+ 80044de:	bd70      	pop	{r4, r5, r6, pc}
+ 80044e0:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
+ 80044e4:	4798      	blx	r3
+ 80044e6:	3501      	adds	r5, #1
+ 80044e8:	e7ee      	b.n	80044c8 <__libc_init_array+0xc>
+ 80044ea:	f856 3025 	ldr.w	r3, [r6, r5, lsl #2]
+ 80044ee:	4798      	blx	r3
+ 80044f0:	3501      	adds	r5, #1
+ 80044f2:	e7f2      	b.n	80044da <__libc_init_array+0x1e>
+ 80044f4:	08004804 	.word	0x08004804
+ 80044f8:	08004804 	.word	0x08004804
+ 80044fc:	08004804 	.word	0x08004804
+ 8004500:	08004808 	.word	0x08004808
 
-080044f4 <malloc>:
- 80044f4:	4b02      	ldr	r3, [pc, #8]	; (8004500 <malloc+0xc>)
- 80044f6:	4601      	mov	r1, r0
- 80044f8:	6818      	ldr	r0, [r3, #0]
- 80044fa:	f000 b86b 	b.w	80045d4 <_malloc_r>
- 80044fe:	bf00      	nop
- 8004500:	20000004 	.word	0x20000004
-
-08004504 <free>:
- 8004504:	4b02      	ldr	r3, [pc, #8]	; (8004510 <free+0xc>)
+08004504 <malloc>:
+ 8004504:	4b02      	ldr	r3, [pc, #8]	; (8004510 <malloc+0xc>)
  8004506:	4601      	mov	r1, r0
  8004508:	6818      	ldr	r0, [r3, #0]
- 800450a:	f000 b817 	b.w	800453c <_free_r>
+ 800450a:	f000 b86b 	b.w	80045e4 <_malloc_r>
  800450e:	bf00      	nop
  8004510:	20000004 	.word	0x20000004
 
-08004514 <memcpy>:
- 8004514:	b510      	push	{r4, lr}
- 8004516:	1e43      	subs	r3, r0, #1
- 8004518:	440a      	add	r2, r1
- 800451a:	4291      	cmp	r1, r2
- 800451c:	d100      	bne.n	8004520 <memcpy+0xc>
- 800451e:	bd10      	pop	{r4, pc}
- 8004520:	f811 4b01 	ldrb.w	r4, [r1], #1
- 8004524:	f803 4f01 	strb.w	r4, [r3, #1]!
- 8004528:	e7f7      	b.n	800451a <memcpy+0x6>
+08004514 <free>:
+ 8004514:	4b02      	ldr	r3, [pc, #8]	; (8004520 <free+0xc>)
+ 8004516:	4601      	mov	r1, r0
+ 8004518:	6818      	ldr	r0, [r3, #0]
+ 800451a:	f000 b817 	b.w	800454c <_free_r>
+ 800451e:	bf00      	nop
+ 8004520:	20000004 	.word	0x20000004
 
-0800452a <memset>:
- 800452a:	4603      	mov	r3, r0
- 800452c:	4402      	add	r2, r0
- 800452e:	4293      	cmp	r3, r2
- 8004530:	d100      	bne.n	8004534 <memset+0xa>
- 8004532:	4770      	bx	lr
- 8004534:	f803 1b01 	strb.w	r1, [r3], #1
- 8004538:	e7f9      	b.n	800452e <memset+0x4>
+08004524 <memcpy>:
+ 8004524:	b510      	push	{r4, lr}
+ 8004526:	1e43      	subs	r3, r0, #1
+ 8004528:	440a      	add	r2, r1
+ 800452a:	4291      	cmp	r1, r2
+ 800452c:	d100      	bne.n	8004530 <memcpy+0xc>
+ 800452e:	bd10      	pop	{r4, pc}
+ 8004530:	f811 4b01 	ldrb.w	r4, [r1], #1
+ 8004534:	f803 4f01 	strb.w	r4, [r3, #1]!
+ 8004538:	e7f7      	b.n	800452a <memcpy+0x6>
+
+0800453a <memset>:
+ 800453a:	4603      	mov	r3, r0
+ 800453c:	4402      	add	r2, r0
+ 800453e:	4293      	cmp	r3, r2
+ 8004540:	d100      	bne.n	8004544 <memset+0xa>
+ 8004542:	4770      	bx	lr
+ 8004544:	f803 1b01 	strb.w	r1, [r3], #1
+ 8004548:	e7f9      	b.n	800453e <memset+0x4>
 	...
 
-0800453c <_free_r>:
- 800453c:	b538      	push	{r3, r4, r5, lr}
- 800453e:	4605      	mov	r5, r0
- 8004540:	2900      	cmp	r1, #0
- 8004542:	d043      	beq.n	80045cc <_free_r+0x90>
- 8004544:	f851 3c04 	ldr.w	r3, [r1, #-4]
- 8004548:	1f0c      	subs	r4, r1, #4
- 800454a:	2b00      	cmp	r3, #0
- 800454c:	bfb8      	it	lt
- 800454e:	18e4      	addlt	r4, r4, r3
- 8004550:	f000 f8ae 	bl	80046b0 <__malloc_lock>
- 8004554:	4a1e      	ldr	r2, [pc, #120]	; (80045d0 <_free_r+0x94>)
- 8004556:	6813      	ldr	r3, [r2, #0]
- 8004558:	4610      	mov	r0, r2
- 800455a:	b933      	cbnz	r3, 800456a <_free_r+0x2e>
- 800455c:	6063      	str	r3, [r4, #4]
- 800455e:	6014      	str	r4, [r2, #0]
- 8004560:	4628      	mov	r0, r5
- 8004562:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
- 8004566:	f000 b8a4 	b.w	80046b2 <__malloc_unlock>
- 800456a:	42a3      	cmp	r3, r4
- 800456c:	d90b      	bls.n	8004586 <_free_r+0x4a>
- 800456e:	6821      	ldr	r1, [r4, #0]
- 8004570:	1862      	adds	r2, r4, r1
- 8004572:	4293      	cmp	r3, r2
- 8004574:	bf01      	itttt	eq
- 8004576:	681a      	ldreq	r2, [r3, #0]
- 8004578:	685b      	ldreq	r3, [r3, #4]
- 800457a:	1852      	addeq	r2, r2, r1
- 800457c:	6022      	streq	r2, [r4, #0]
- 800457e:	6063      	str	r3, [r4, #4]
- 8004580:	6004      	str	r4, [r0, #0]
- 8004582:	e7ed      	b.n	8004560 <_free_r+0x24>
- 8004584:	4613      	mov	r3, r2
- 8004586:	685a      	ldr	r2, [r3, #4]
- 8004588:	b10a      	cbz	r2, 800458e <_free_r+0x52>
- 800458a:	42a2      	cmp	r2, r4
- 800458c:	d9fa      	bls.n	8004584 <_free_r+0x48>
- 800458e:	6819      	ldr	r1, [r3, #0]
- 8004590:	1858      	adds	r0, r3, r1
- 8004592:	42a0      	cmp	r0, r4
- 8004594:	d10b      	bne.n	80045ae <_free_r+0x72>
- 8004596:	6820      	ldr	r0, [r4, #0]
- 8004598:	4401      	add	r1, r0
- 800459a:	1858      	adds	r0, r3, r1
- 800459c:	4282      	cmp	r2, r0
- 800459e:	6019      	str	r1, [r3, #0]
- 80045a0:	d1de      	bne.n	8004560 <_free_r+0x24>
- 80045a2:	6810      	ldr	r0, [r2, #0]
- 80045a4:	6852      	ldr	r2, [r2, #4]
- 80045a6:	4401      	add	r1, r0
- 80045a8:	6019      	str	r1, [r3, #0]
- 80045aa:	605a      	str	r2, [r3, #4]
- 80045ac:	e7d8      	b.n	8004560 <_free_r+0x24>
- 80045ae:	d902      	bls.n	80045b6 <_free_r+0x7a>
- 80045b0:	230c      	movs	r3, #12
- 80045b2:	602b      	str	r3, [r5, #0]
- 80045b4:	e7d4      	b.n	8004560 <_free_r+0x24>
- 80045b6:	6820      	ldr	r0, [r4, #0]
- 80045b8:	1821      	adds	r1, r4, r0
- 80045ba:	428a      	cmp	r2, r1
- 80045bc:	bf01      	itttt	eq
- 80045be:	6811      	ldreq	r1, [r2, #0]
- 80045c0:	6852      	ldreq	r2, [r2, #4]
- 80045c2:	1809      	addeq	r1, r1, r0
- 80045c4:	6021      	streq	r1, [r4, #0]
- 80045c6:	6062      	str	r2, [r4, #4]
- 80045c8:	605c      	str	r4, [r3, #4]
- 80045ca:	e7c9      	b.n	8004560 <_free_r+0x24>
- 80045cc:	bd38      	pop	{r3, r4, r5, pc}
- 80045ce:	bf00      	nop
- 80045d0:	20000188 	.word	0x20000188
+0800454c <_free_r>:
+ 800454c:	b538      	push	{r3, r4, r5, lr}
+ 800454e:	4605      	mov	r5, r0
+ 8004550:	2900      	cmp	r1, #0
+ 8004552:	d043      	beq.n	80045dc <_free_r+0x90>
+ 8004554:	f851 3c04 	ldr.w	r3, [r1, #-4]
+ 8004558:	1f0c      	subs	r4, r1, #4
+ 800455a:	2b00      	cmp	r3, #0
+ 800455c:	bfb8      	it	lt
+ 800455e:	18e4      	addlt	r4, r4, r3
+ 8004560:	f000 f8ae 	bl	80046c0 <__malloc_lock>
+ 8004564:	4a1e      	ldr	r2, [pc, #120]	; (80045e0 <_free_r+0x94>)
+ 8004566:	6813      	ldr	r3, [r2, #0]
+ 8004568:	4610      	mov	r0, r2
+ 800456a:	b933      	cbnz	r3, 800457a <_free_r+0x2e>
+ 800456c:	6063      	str	r3, [r4, #4]
+ 800456e:	6014      	str	r4, [r2, #0]
+ 8004570:	4628      	mov	r0, r5
+ 8004572:	e8bd 4038 	ldmia.w	sp!, {r3, r4, r5, lr}
+ 8004576:	f000 b8a4 	b.w	80046c2 <__malloc_unlock>
+ 800457a:	42a3      	cmp	r3, r4
+ 800457c:	d90b      	bls.n	8004596 <_free_r+0x4a>
+ 800457e:	6821      	ldr	r1, [r4, #0]
+ 8004580:	1862      	adds	r2, r4, r1
+ 8004582:	4293      	cmp	r3, r2
+ 8004584:	bf01      	itttt	eq
+ 8004586:	681a      	ldreq	r2, [r3, #0]
+ 8004588:	685b      	ldreq	r3, [r3, #4]
+ 800458a:	1852      	addeq	r2, r2, r1
+ 800458c:	6022      	streq	r2, [r4, #0]
+ 800458e:	6063      	str	r3, [r4, #4]
+ 8004590:	6004      	str	r4, [r0, #0]
+ 8004592:	e7ed      	b.n	8004570 <_free_r+0x24>
+ 8004594:	4613      	mov	r3, r2
+ 8004596:	685a      	ldr	r2, [r3, #4]
+ 8004598:	b10a      	cbz	r2, 800459e <_free_r+0x52>
+ 800459a:	42a2      	cmp	r2, r4
+ 800459c:	d9fa      	bls.n	8004594 <_free_r+0x48>
+ 800459e:	6819      	ldr	r1, [r3, #0]
+ 80045a0:	1858      	adds	r0, r3, r1
+ 80045a2:	42a0      	cmp	r0, r4
+ 80045a4:	d10b      	bne.n	80045be <_free_r+0x72>
+ 80045a6:	6820      	ldr	r0, [r4, #0]
+ 80045a8:	4401      	add	r1, r0
+ 80045aa:	1858      	adds	r0, r3, r1
+ 80045ac:	4282      	cmp	r2, r0
+ 80045ae:	6019      	str	r1, [r3, #0]
+ 80045b0:	d1de      	bne.n	8004570 <_free_r+0x24>
+ 80045b2:	6810      	ldr	r0, [r2, #0]
+ 80045b4:	6852      	ldr	r2, [r2, #4]
+ 80045b6:	4401      	add	r1, r0
+ 80045b8:	6019      	str	r1, [r3, #0]
+ 80045ba:	605a      	str	r2, [r3, #4]
+ 80045bc:	e7d8      	b.n	8004570 <_free_r+0x24>
+ 80045be:	d902      	bls.n	80045c6 <_free_r+0x7a>
+ 80045c0:	230c      	movs	r3, #12
+ 80045c2:	602b      	str	r3, [r5, #0]
+ 80045c4:	e7d4      	b.n	8004570 <_free_r+0x24>
+ 80045c6:	6820      	ldr	r0, [r4, #0]
+ 80045c8:	1821      	adds	r1, r4, r0
+ 80045ca:	428a      	cmp	r2, r1
+ 80045cc:	bf01      	itttt	eq
+ 80045ce:	6811      	ldreq	r1, [r2, #0]
+ 80045d0:	6852      	ldreq	r2, [r2, #4]
+ 80045d2:	1809      	addeq	r1, r1, r0
+ 80045d4:	6021      	streq	r1, [r4, #0]
+ 80045d6:	6062      	str	r2, [r4, #4]
+ 80045d8:	605c      	str	r4, [r3, #4]
+ 80045da:	e7c9      	b.n	8004570 <_free_r+0x24>
+ 80045dc:	bd38      	pop	{r3, r4, r5, pc}
+ 80045de:	bf00      	nop
+ 80045e0:	20000188 	.word	0x20000188
 
-080045d4 <_malloc_r>:
- 80045d4:	b570      	push	{r4, r5, r6, lr}
- 80045d6:	1ccd      	adds	r5, r1, #3
- 80045d8:	f025 0503 	bic.w	r5, r5, #3
- 80045dc:	3508      	adds	r5, #8
- 80045de:	2d0c      	cmp	r5, #12
- 80045e0:	bf38      	it	cc
- 80045e2:	250c      	movcc	r5, #12
- 80045e4:	2d00      	cmp	r5, #0
- 80045e6:	4606      	mov	r6, r0
- 80045e8:	db01      	blt.n	80045ee <_malloc_r+0x1a>
- 80045ea:	42a9      	cmp	r1, r5
- 80045ec:	d903      	bls.n	80045f6 <_malloc_r+0x22>
- 80045ee:	230c      	movs	r3, #12
- 80045f0:	6033      	str	r3, [r6, #0]
- 80045f2:	2000      	movs	r0, #0
- 80045f4:	bd70      	pop	{r4, r5, r6, pc}
- 80045f6:	f000 f85b 	bl	80046b0 <__malloc_lock>
- 80045fa:	4a23      	ldr	r2, [pc, #140]	; (8004688 <_malloc_r+0xb4>)
- 80045fc:	6814      	ldr	r4, [r2, #0]
- 80045fe:	4621      	mov	r1, r4
- 8004600:	b991      	cbnz	r1, 8004628 <_malloc_r+0x54>
- 8004602:	4c22      	ldr	r4, [pc, #136]	; (800468c <_malloc_r+0xb8>)
- 8004604:	6823      	ldr	r3, [r4, #0]
- 8004606:	b91b      	cbnz	r3, 8004610 <_malloc_r+0x3c>
- 8004608:	4630      	mov	r0, r6
- 800460a:	f000 f841 	bl	8004690 <_sbrk_r>
- 800460e:	6020      	str	r0, [r4, #0]
- 8004610:	4629      	mov	r1, r5
- 8004612:	4630      	mov	r0, r6
- 8004614:	f000 f83c 	bl	8004690 <_sbrk_r>
- 8004618:	1c43      	adds	r3, r0, #1
- 800461a:	d126      	bne.n	800466a <_malloc_r+0x96>
- 800461c:	230c      	movs	r3, #12
- 800461e:	4630      	mov	r0, r6
- 8004620:	6033      	str	r3, [r6, #0]
- 8004622:	f000 f846 	bl	80046b2 <__malloc_unlock>
- 8004626:	e7e4      	b.n	80045f2 <_malloc_r+0x1e>
- 8004628:	680b      	ldr	r3, [r1, #0]
- 800462a:	1b5b      	subs	r3, r3, r5
- 800462c:	d41a      	bmi.n	8004664 <_malloc_r+0x90>
- 800462e:	2b0b      	cmp	r3, #11
- 8004630:	d90f      	bls.n	8004652 <_malloc_r+0x7e>
- 8004632:	600b      	str	r3, [r1, #0]
- 8004634:	18cc      	adds	r4, r1, r3
- 8004636:	50cd      	str	r5, [r1, r3]
- 8004638:	4630      	mov	r0, r6
- 800463a:	f000 f83a 	bl	80046b2 <__malloc_unlock>
- 800463e:	f104 000b 	add.w	r0, r4, #11
- 8004642:	1d23      	adds	r3, r4, #4
- 8004644:	f020 0007 	bic.w	r0, r0, #7
- 8004648:	1ac3      	subs	r3, r0, r3
- 800464a:	d01b      	beq.n	8004684 <_malloc_r+0xb0>
- 800464c:	425a      	negs	r2, r3
- 800464e:	50e2      	str	r2, [r4, r3]
- 8004650:	bd70      	pop	{r4, r5, r6, pc}
- 8004652:	428c      	cmp	r4, r1
- 8004654:	bf0b      	itete	eq
- 8004656:	6863      	ldreq	r3, [r4, #4]
- 8004658:	684b      	ldrne	r3, [r1, #4]
- 800465a:	6013      	streq	r3, [r2, #0]
- 800465c:	6063      	strne	r3, [r4, #4]
- 800465e:	bf18      	it	ne
- 8004660:	460c      	movne	r4, r1
- 8004662:	e7e9      	b.n	8004638 <_malloc_r+0x64>
- 8004664:	460c      	mov	r4, r1
- 8004666:	6849      	ldr	r1, [r1, #4]
- 8004668:	e7ca      	b.n	8004600 <_malloc_r+0x2c>
- 800466a:	1cc4      	adds	r4, r0, #3
- 800466c:	f024 0403 	bic.w	r4, r4, #3
- 8004670:	42a0      	cmp	r0, r4
- 8004672:	d005      	beq.n	8004680 <_malloc_r+0xac>
- 8004674:	1a21      	subs	r1, r4, r0
- 8004676:	4630      	mov	r0, r6
- 8004678:	f000 f80a 	bl	8004690 <_sbrk_r>
- 800467c:	3001      	adds	r0, #1
- 800467e:	d0cd      	beq.n	800461c <_malloc_r+0x48>
- 8004680:	6025      	str	r5, [r4, #0]
- 8004682:	e7d9      	b.n	8004638 <_malloc_r+0x64>
- 8004684:	bd70      	pop	{r4, r5, r6, pc}
- 8004686:	bf00      	nop
- 8004688:	20000188 	.word	0x20000188
- 800468c:	2000018c 	.word	0x2000018c
+080045e4 <_malloc_r>:
+ 80045e4:	b570      	push	{r4, r5, r6, lr}
+ 80045e6:	1ccd      	adds	r5, r1, #3
+ 80045e8:	f025 0503 	bic.w	r5, r5, #3
+ 80045ec:	3508      	adds	r5, #8
+ 80045ee:	2d0c      	cmp	r5, #12
+ 80045f0:	bf38      	it	cc
+ 80045f2:	250c      	movcc	r5, #12
+ 80045f4:	2d00      	cmp	r5, #0
+ 80045f6:	4606      	mov	r6, r0
+ 80045f8:	db01      	blt.n	80045fe <_malloc_r+0x1a>
+ 80045fa:	42a9      	cmp	r1, r5
+ 80045fc:	d903      	bls.n	8004606 <_malloc_r+0x22>
+ 80045fe:	230c      	movs	r3, #12
+ 8004600:	6033      	str	r3, [r6, #0]
+ 8004602:	2000      	movs	r0, #0
+ 8004604:	bd70      	pop	{r4, r5, r6, pc}
+ 8004606:	f000 f85b 	bl	80046c0 <__malloc_lock>
+ 800460a:	4a23      	ldr	r2, [pc, #140]	; (8004698 <_malloc_r+0xb4>)
+ 800460c:	6814      	ldr	r4, [r2, #0]
+ 800460e:	4621      	mov	r1, r4
+ 8004610:	b991      	cbnz	r1, 8004638 <_malloc_r+0x54>
+ 8004612:	4c22      	ldr	r4, [pc, #136]	; (800469c <_malloc_r+0xb8>)
+ 8004614:	6823      	ldr	r3, [r4, #0]
+ 8004616:	b91b      	cbnz	r3, 8004620 <_malloc_r+0x3c>
+ 8004618:	4630      	mov	r0, r6
+ 800461a:	f000 f841 	bl	80046a0 <_sbrk_r>
+ 800461e:	6020      	str	r0, [r4, #0]
+ 8004620:	4629      	mov	r1, r5
+ 8004622:	4630      	mov	r0, r6
+ 8004624:	f000 f83c 	bl	80046a0 <_sbrk_r>
+ 8004628:	1c43      	adds	r3, r0, #1
+ 800462a:	d126      	bne.n	800467a <_malloc_r+0x96>
+ 800462c:	230c      	movs	r3, #12
+ 800462e:	4630      	mov	r0, r6
+ 8004630:	6033      	str	r3, [r6, #0]
+ 8004632:	f000 f846 	bl	80046c2 <__malloc_unlock>
+ 8004636:	e7e4      	b.n	8004602 <_malloc_r+0x1e>
+ 8004638:	680b      	ldr	r3, [r1, #0]
+ 800463a:	1b5b      	subs	r3, r3, r5
+ 800463c:	d41a      	bmi.n	8004674 <_malloc_r+0x90>
+ 800463e:	2b0b      	cmp	r3, #11
+ 8004640:	d90f      	bls.n	8004662 <_malloc_r+0x7e>
+ 8004642:	600b      	str	r3, [r1, #0]
+ 8004644:	18cc      	adds	r4, r1, r3
+ 8004646:	50cd      	str	r5, [r1, r3]
+ 8004648:	4630      	mov	r0, r6
+ 800464a:	f000 f83a 	bl	80046c2 <__malloc_unlock>
+ 800464e:	f104 000b 	add.w	r0, r4, #11
+ 8004652:	1d23      	adds	r3, r4, #4
+ 8004654:	f020 0007 	bic.w	r0, r0, #7
+ 8004658:	1ac3      	subs	r3, r0, r3
+ 800465a:	d01b      	beq.n	8004694 <_malloc_r+0xb0>
+ 800465c:	425a      	negs	r2, r3
+ 800465e:	50e2      	str	r2, [r4, r3]
+ 8004660:	bd70      	pop	{r4, r5, r6, pc}
+ 8004662:	428c      	cmp	r4, r1
+ 8004664:	bf0b      	itete	eq
+ 8004666:	6863      	ldreq	r3, [r4, #4]
+ 8004668:	684b      	ldrne	r3, [r1, #4]
+ 800466a:	6013      	streq	r3, [r2, #0]
+ 800466c:	6063      	strne	r3, [r4, #4]
+ 800466e:	bf18      	it	ne
+ 8004670:	460c      	movne	r4, r1
+ 8004672:	e7e9      	b.n	8004648 <_malloc_r+0x64>
+ 8004674:	460c      	mov	r4, r1
+ 8004676:	6849      	ldr	r1, [r1, #4]
+ 8004678:	e7ca      	b.n	8004610 <_malloc_r+0x2c>
+ 800467a:	1cc4      	adds	r4, r0, #3
+ 800467c:	f024 0403 	bic.w	r4, r4, #3
+ 8004680:	42a0      	cmp	r0, r4
+ 8004682:	d005      	beq.n	8004690 <_malloc_r+0xac>
+ 8004684:	1a21      	subs	r1, r4, r0
+ 8004686:	4630      	mov	r0, r6
+ 8004688:	f000 f80a 	bl	80046a0 <_sbrk_r>
+ 800468c:	3001      	adds	r0, #1
+ 800468e:	d0cd      	beq.n	800462c <_malloc_r+0x48>
+ 8004690:	6025      	str	r5, [r4, #0]
+ 8004692:	e7d9      	b.n	8004648 <_malloc_r+0x64>
+ 8004694:	bd70      	pop	{r4, r5, r6, pc}
+ 8004696:	bf00      	nop
+ 8004698:	20000188 	.word	0x20000188
+ 800469c:	2000018c 	.word	0x2000018c
 
-08004690 <_sbrk_r>:
- 8004690:	b538      	push	{r3, r4, r5, lr}
- 8004692:	2300      	movs	r3, #0
- 8004694:	4c05      	ldr	r4, [pc, #20]	; (80046ac <_sbrk_r+0x1c>)
- 8004696:	4605      	mov	r5, r0
- 8004698:	4608      	mov	r0, r1
- 800469a:	6023      	str	r3, [r4, #0]
- 800469c:	f000 f80a 	bl	80046b4 <_sbrk>
- 80046a0:	1c43      	adds	r3, r0, #1
- 80046a2:	d102      	bne.n	80046aa <_sbrk_r+0x1a>
- 80046a4:	6823      	ldr	r3, [r4, #0]
- 80046a6:	b103      	cbz	r3, 80046aa <_sbrk_r+0x1a>
- 80046a8:	602b      	str	r3, [r5, #0]
- 80046aa:	bd38      	pop	{r3, r4, r5, pc}
- 80046ac:	200001a4 	.word	0x200001a4
+080046a0 <_sbrk_r>:
+ 80046a0:	b538      	push	{r3, r4, r5, lr}
+ 80046a2:	2300      	movs	r3, #0
+ 80046a4:	4c05      	ldr	r4, [pc, #20]	; (80046bc <_sbrk_r+0x1c>)
+ 80046a6:	4605      	mov	r5, r0
+ 80046a8:	4608      	mov	r0, r1
+ 80046aa:	6023      	str	r3, [r4, #0]
+ 80046ac:	f000 f80a 	bl	80046c4 <_sbrk>
+ 80046b0:	1c43      	adds	r3, r0, #1
+ 80046b2:	d102      	bne.n	80046ba <_sbrk_r+0x1a>
+ 80046b4:	6823      	ldr	r3, [r4, #0]
+ 80046b6:	b103      	cbz	r3, 80046ba <_sbrk_r+0x1a>
+ 80046b8:	602b      	str	r3, [r5, #0]
+ 80046ba:	bd38      	pop	{r3, r4, r5, pc}
+ 80046bc:	200001a4 	.word	0x200001a4
 
-080046b0 <__malloc_lock>:
- 80046b0:	4770      	bx	lr
+080046c0 <__malloc_lock>:
+ 80046c0:	4770      	bx	lr
 
-080046b2 <__malloc_unlock>:
- 80046b2:	4770      	bx	lr
+080046c2 <__malloc_unlock>:
+ 80046c2:	4770      	bx	lr
 
-080046b4 <_sbrk>:
- 80046b4:	4b04      	ldr	r3, [pc, #16]	; (80046c8 <_sbrk+0x14>)
- 80046b6:	4602      	mov	r2, r0
- 80046b8:	6819      	ldr	r1, [r3, #0]
- 80046ba:	b909      	cbnz	r1, 80046c0 <_sbrk+0xc>
- 80046bc:	4903      	ldr	r1, [pc, #12]	; (80046cc <_sbrk+0x18>)
- 80046be:	6019      	str	r1, [r3, #0]
- 80046c0:	6818      	ldr	r0, [r3, #0]
- 80046c2:	4402      	add	r2, r0
- 80046c4:	601a      	str	r2, [r3, #0]
- 80046c6:	4770      	bx	lr
- 80046c8:	20000190 	.word	0x20000190
- 80046cc:	200001a8 	.word	0x200001a8
+080046c4 <_sbrk>:
+ 80046c4:	4b04      	ldr	r3, [pc, #16]	; (80046d8 <_sbrk+0x14>)
+ 80046c6:	4602      	mov	r2, r0
+ 80046c8:	6819      	ldr	r1, [r3, #0]
+ 80046ca:	b909      	cbnz	r1, 80046d0 <_sbrk+0xc>
+ 80046cc:	4903      	ldr	r1, [pc, #12]	; (80046dc <_sbrk+0x18>)
+ 80046ce:	6019      	str	r1, [r3, #0]
+ 80046d0:	6818      	ldr	r0, [r3, #0]
+ 80046d2:	4402      	add	r2, r0
+ 80046d4:	601a      	str	r2, [r3, #0]
+ 80046d6:	4770      	bx	lr
+ 80046d8:	20000190 	.word	0x20000190
+ 80046dc:	200001a8 	.word	0x200001a8
 
-080046d0 <_init>:
- 80046d0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 80046d2:	bf00      	nop
- 80046d4:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 80046d6:	bc08      	pop	{r3}
- 80046d8:	469e      	mov	lr, r3
- 80046da:	4770      	bx	lr
+080046e0 <_init>:
+ 80046e0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80046e2:	bf00      	nop
+ 80046e4:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80046e6:	bc08      	pop	{r3}
+ 80046e8:	469e      	mov	lr, r3
+ 80046ea:	4770      	bx	lr
 
-080046dc <_fini>:
- 80046dc:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 80046de:	bf00      	nop
- 80046e0:	bcf8      	pop	{r3, r4, r5, r6, r7}
- 80046e2:	bc08      	pop	{r3}
- 80046e4:	469e      	mov	lr, r3
- 80046e6:	4770      	bx	lr
+080046ec <_fini>:
+ 80046ec:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80046ee:	bf00      	nop
+ 80046f0:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80046f2:	bc08      	pop	{r3}
+ 80046f4:	469e      	mov	lr, r3
+ 80046f6:	4770      	bx	lr
