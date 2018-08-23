@@ -112,7 +112,9 @@ void  ThreadCommunication ( void * pvParameters )
 //			}
 //		}
 
+	const char * infoTxt = "ABCDEFGHIJKLMNOP";
 
+	enableUart1Dma(infoTxt, strlen(infoTxt));
 
 
 	MqttNet net;
@@ -154,8 +156,17 @@ void  ThreadCommunication ( void * pvParameters )
 	subscribe.topics = topics;
 
 	MqttClient_Subscribe(&client, &subscribe);
-	xQueueSend(logMsgQueue, "client subsribe", 0);
+	//xQueueSend(logMsgQueue, "client subscribe", 0);
+
+	uint8_t buf[256];
+	int buf_len =0;
 	for (;;) {
+
+
+		uint8_t rxNb = client_rec(buf, buf_len);
+			if (rxNb >0){
+				asm volatile ("nop");
+			}
 
 
 //
@@ -164,28 +175,28 @@ void  ThreadCommunication ( void * pvParameters )
 //			GPIOC->ODR ^= GPIO_Pin_13;
 //		}
 
-		MqttClient_WaitMessage(&client,100);
-
-
-
-
-
-		msgDataExt_t messageExt;
-		if (xQueueReceive(externalMsgQueue, &messageExt, 0)){
-
-			MqttPublish publishPckt;
-			switch (messageExt.type){
-			case lightLevel:
-				publishPckt.topic_name = test_topic1;
-				publishPckt.topic_name_len = sizeof(test_topic1);
-				xQueueSend(logMsgQueue, "light msg rcv", 0);
-			}
-
-
-			 MqttClient_Publish(&client, &publishPckt);
-		}
+//		MqttClient_WaitMessage(&client,100);
+//
+//
+//
+//
+//
+//		msgDataExt_t messageExt;
+//		if (xQueueReceive(externalMsgQueue, &messageExt, 0)){
+//
+//			MqttPublish publishPckt;
+//			switch (messageExt.type){
+//			case lightLevel:
+//				publishPckt.topic_name = test_topic1;
+//				publishPckt.topic_name_len = sizeof(test_topic1);
+//				xQueueSend(logMsgQueue, "light msg rcv", 0);
+//			}
+//
+//
+//			 MqttClient_Publish(&client, &publishPckt);
+//		}
 
 		//poll sevrer b ping and inform supervisor about broken connection
-		vTaskDelay(1000);
+		vTaskDelay(10);
 	}
 }

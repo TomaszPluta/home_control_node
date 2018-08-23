@@ -23,5 +23,6 @@
 
 void EnableUart (USART_TypeDef * usart);
 void SendString (const char* string);
+void enableUart1Dma(uint32_t addressFrom, uint16_t bytesNb);
 
 #endif /* PLATFORM_H_ */

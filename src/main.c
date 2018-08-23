@@ -48,7 +48,7 @@ void  gpio_init(void){
 
  int main(){
 
-
+//center nie odpowiada? Sprawdzic czy to co nadaje (w mainie) jest obierane w nodzie
 
 	 	EnableGpioClk(LOG_UART_PORT);
 	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);

@@ -17,6 +17,8 @@ void EnableUart (USART_TypeDef * usart){
 	usart->CR1 |= USART_CR1_UE;
 	usart->CR1 |= USART_CR1_TE;
 	usart->CR1 |= USART_CR1_RE;
+	usart->CR3 |= USART_CR3_DMAT;
+
 }
 
 uint16_t uart1_receive(void){
@@ -49,6 +51,22 @@ void SendString (const char* string){
 }
 
 
+
+void enableUart1Dma(uint32_t addressFrom, uint16_t bytesNb){
+	RCC->AHBENR = RCC_AHBENR_DMA1EN;
+	DMA1_Channel4->CMAR = addressFrom;
+	DMA1_Channel4->CPAR =   0x40013804;
+	DMA1_Channel4->CNDTR = bytesNb;
+	DMA1_Channel4->CCR |= DMA_CCR1_DIR;
+	DMA1_Channel4->CCR |= DMA_CCR1_MINC;
+	DMA1_Channel4->CCR &= ~DMA_CCR1_MSIZE;
+	DMA1_Channel4->CCR &= ~DMA_CCR1_PSIZE;
+//	DMA1_Channel4->CCR |= DMA_CCR1_CIRC;
+//	DMA1_Channel4->CCR |= DMA_CCR1_MEM2MEM;
+	DMA1_Channel4->CCR |= DMA_CCR1_EN;
+
+
+}
 
 
 
