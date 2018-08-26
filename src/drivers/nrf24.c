@@ -312,7 +312,7 @@ void nrf24_config(uint8_t channel, uint8_t pay_length)
     nrf24_configRegister(RF_SETUP, (1 << RF_DR_LOW)|((0x03)<<RF_PWR));
 
     // CRC enable, 1 byte CRC length
-    nrf24_configRegister(CONFIG,nrf24_CONFIG);
+    nrf24_configRegister(CONFIG, nrf24_CONFIG);
 
     // Auto Acknowledgment
     nrf24_configRegister(EN_AA,(1<<ENAA_P0)|(1<<ENAA_P1)|(0<<ENAA_P2)|(0<<ENAA_P3)|(0<<ENAA_P4)|(0<<ENAA_P5));
@@ -356,17 +356,27 @@ void nrf24_tx_address(uint8_t* adr)
 /* Returns 1 if data is ready ... */
 uint8_t nrf24_dataReady() 
 {
-    // See note in getData() function - just checking RX_DR isn't good enough
-    uint8_t status = nrf24_getStatus();
+	// See note in getData() function - just checking RX_DR isn't good enough
+	uint8_t status = nrf24_getStatus();
 
-    // We can short circuit on RX_DR, but if it's not set, we still need
-    // to check the FIFO for any pending packets
-    if ( status & (1 << RX_DR) ) 
-    {
-        return 1;
-    }
+	// We can short circuit on RX_DR, but if it's not set, we still need
+	// to check the FIFO for any pending packets
+	if ( status & (1 << RX_DR) )
+	{
+		return 1;
+	}
 
-    return !nrf24_rxFifoEmpty();;
+	uint8_t fifoStatus;
+
+	nrf24_readRegister(FIFO_STATUS,&fifoStatus,1);
+
+	if (fifoStatus & (1 << RX_EMPTY)){
+		return false;
+	} else {
+		return true;
+	}
+
+	//   return !nrf24_rxFifoEmpty();;
 }
 
 /* Checks if receive FIFO is empty or not */
@@ -376,7 +386,12 @@ uint8_t nrf24_rxFifoEmpty()
 
     nrf24_readRegister(FIFO_STATUS,&fifoStatus,1);
     
-    return (fifoStatus & (1 << RX_EMPTY));
+    if (fifoStatus & (1 << RX_EMPTY)){
+    	return false;
+    } else {
+    	return true;
+    }
+
 }
 
 /* Returns the length of data waiting in the RX fifo */

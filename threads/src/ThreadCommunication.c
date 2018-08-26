@@ -24,21 +24,19 @@ extern QueueHandle_t logMsgQueue;
 
 
 int client_rec(byte* buf, uint16_t bufLen){
-	if(nrf24_dataReady())
-	{
-		if(nrf24_dataReady())
-		{	uint8_t rxBytesNb;
-			uint8_t data_array[32];
-			nrf24_getData(data_array);
-			rxBytesNb = l3_receive_packet(data_array, buf, bufLen);
-			if (rxBytesNb){
 
-				GPIOC->BRR = GPIO_Pin_13;
-				return rxBytesNb;
-			}
+	if(nrf24_dataReady()){
+		uint8_t rxBytesNb;
+		uint8_t data_array[32];
+		nrf24_getData(data_array);
+		rxBytesNb = l3_receive_packet(data_array, buf, bufLen);
+		if (rxBytesNb){
+			GPIOC->BRR = GPIO_Pin_13;
+			return rxBytesNb;
 		}
-//		_delay_ms(10);
 	}
+	//		_delay_ms(10);
+
 	return 0;
 }
 
@@ -75,6 +73,24 @@ int mqtt_net_disconnect_cb(void *context){
 }
 
 
+void RadioReceiveCallback (void){
+	uint8_t buf[256];
+	int buf_len =0;
+	uint8_t rxNb = client_rec(buf, buf_len);
+	if (rxNb >0){
+		asm volatile ("nop");
+	}
+}
+
+void EXTI9_5_IRQHandler (void){
+	RadioReceiveCallback();
+	EXTI->PR |= (1<<5);
+}
+
+
+
+
+
 
 void  ThreadCommunication ( void * pvParameters )
 {
@@ -96,7 +112,8 @@ void  ThreadCommunication ( void * pvParameters )
 	nrf24_tx_address(tx_address);
 	nrf24_rx_address(rx_address);
 
-
+	SetGpioAsInPullUp(GPIOB, 5);
+	EnableExti(GPIOB, 5, false, true);
 
 
 //		while (1) {
@@ -114,7 +131,7 @@ void  ThreadCommunication ( void * pvParameters )
 
 	const char * infoTxt = "ABCDEFGHIJKLMNOP";
 
-	enableUart1Dma(infoTxt, strlen(infoTxt));
+	SendUart1Dma(infoTxt, strlen(infoTxt));
 
 
 	MqttNet net;
@@ -137,7 +154,6 @@ void  ThreadCommunication ( void * pvParameters )
 	mqtt_con.username ="bedroomTMP1";
 	mqtt_con.password = "passw0rd";
 	MqttClient_Connect(&client, &mqtt_con);
-
 	xQueueSend(logMsgQueue, "client connected", 0);
 
 	const char* test_topic1 = "flat/livingroom/temp/1";
@@ -158,15 +174,11 @@ void  ThreadCommunication ( void * pvParameters )
 	MqttClient_Subscribe(&client, &subscribe);
 	//xQueueSend(logMsgQueue, "client subscribe", 0);
 
-	uint8_t buf[256];
-	int buf_len =0;
+
 	for (;;) {
 
-
-		uint8_t rxNb = client_rec(buf, buf_len);
-			if (rxNb >0){
-				asm volatile ("nop");
-			}
+//
+		RadioReceiveCallback();
 
 
 //

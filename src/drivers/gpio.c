@@ -42,9 +42,9 @@ void SetGpioAsInput (GPIO_TypeDef * gpioPort, uint8_t pinNb){//
 
 void SetGpioAsInFloating (GPIO_TypeDef * gpioPort, uint8_t pinNb){
 	if (pinNb < 8){
-//		gpioPort->CRL &= ~(PIN_MODE_MSK<<pinNb);
-//		gpioPort->CRL &= ~(PIN_CNF_MSK<<pinNb);
-//		gpioPort->CRL |= (PIN_CNF_FLOAT<<pinNb);
+		gpioPort->CRL &= ~(PIN_MODE_MSK<<pinNb);
+		gpioPort->CRL &= ~(PIN_CNF_MSK<<pinNb);
+		gpioPort->CRL |= (PIN_CNF_FLOAT<<pinNb);
 
 	} else {
 		gpioPort->CRH &= ~(PIN_MODE_MSK<<(pinNb-8)*4);
@@ -52,6 +52,27 @@ void SetGpioAsInFloating (GPIO_TypeDef * gpioPort, uint8_t pinNb){
 		gpioPort->CRH |= (PIN_CNF_FLOAT<<(((pinNb-8)*4)+2));
 	}
 }
+
+
+
+
+void SetGpioAsInPullUp (GPIO_TypeDef * gpioPort, uint8_t pinNb){
+	if (pinNb < 8){
+		gpioPort->CRL &= ~(PIN_MODE_MSK<<(pinNb*4));
+		gpioPort->CRL &= ~(PIN_CNF_MSK<<((pinNb*4)+2));
+		gpioPort->CRL |= (PIN_CNF_PUSH_PULL<<((pinNb*4)+2));
+		gpioPort->ODR |= (1<<pinNb);
+
+	} else {
+//		gpioPort->CRH &= ~(PIN_MODE_MSK<<(pinNb-8)*4);
+//		gpioPort->CRH &= ~(PIN_CNF_MSK<<(pinNb-8)*4);
+//		gpioPort->CRH |= (PIN_CNF_PUSH_PULL<<(((pinNb-8)*4)+2));
+//		gpioPort->ODR |=  (1<<pinNb);
+	}
+}
+
+
+
 
 void SetGpioAsOutAltPushPUll (GPIO_TypeDef * gpioPort, uint8_t pinNb){
 	if (pinNb < 8){
@@ -84,4 +105,22 @@ void SetGpioAsOutput(GPIO_TypeDef * gpioPort, uint8_t pinNb){
 bool IsGpioHigh(GPIO_TypeDef * gpioPort, uint8_t pinNb){
 	return (gpioPort->IDR & (1<<pinNb));
 }
+
+
+
+void EnableExti(GPIO_TypeDef * gpioPort, uint8_t pinNb, bool rise, bool fall){
+	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+	AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PB;
+	NVIC_EnableIRQ(EXTI9_5_IRQn);
+	EXTI->IMR  |= (1<<pinNb);
+	if (rise){
+		EXTI->RTSR |= (1<<pinNb);
+	}
+	if (fall){
+		EXTI->FTSR |= (1<<pinNb);
+	}
+}
+
+
+
 

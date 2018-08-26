@@ -19,6 +19,7 @@ void EnableUart (USART_TypeDef * usart){
 	usart->CR1 |= USART_CR1_RE;
 	usart->CR3 |= USART_CR3_DMAT;
 
+	NVIC_EnableIRQ(USART1_IRQn);
 }
 
 uint16_t uart1_receive(void){
@@ -52,9 +53,9 @@ void SendString (const char* string){
 
 
 
-void enableUart1Dma(uint32_t addressFrom, uint16_t bytesNb){
+void SendUart1Dma(uint32_t sourceAddr, uint16_t bytesNb){
 	RCC->AHBENR = RCC_AHBENR_DMA1EN;
-	DMA1_Channel4->CMAR = addressFrom;
+	DMA1_Channel4->CMAR = sourceAddr;
 	DMA1_Channel4->CPAR =   0x40013804;
 	DMA1_Channel4->CNDTR = bytesNb;
 	DMA1_Channel4->CCR |= DMA_CCR1_DIR;
@@ -64,9 +65,85 @@ void enableUart1Dma(uint32_t addressFrom, uint16_t bytesNb){
 //	DMA1_Channel4->CCR |= DMA_CCR1_CIRC;
 //	DMA1_Channel4->CCR |= DMA_CCR1_MEM2MEM;
 	DMA1_Channel4->CCR |= DMA_CCR1_EN;
-
-
 }
 
 
+
+
+//
+//void ring_buffer_write (volatile ring_buff_t * r_buff, uint8_t * data, uint16_t amount)
+//{
+//	while (amount--){
+//		r_buff->buffer[r_buff->head++] = *data;
+//		if(r_buff->head == R_BUFF_SIZE){
+//			r_buff->head =0;
+//		}
+//	}
+//}
+//
+//
+//uint16_t ring_buffer_read (volatile ring_buff_t * r_buff, uint8_t * data, uint16_t amount)
+//{
+//	uint16_t just_read = 0;
+//	uint16_t to_read=0;
+//	int32_t dist;
+//
+//	dist = (r_buff->head - r_buff->tail);
+//	if (dist>0){
+//		to_read = dist;
+//	}
+//	else  if (dist < 0){
+//		to_read = (R_BUFF_END - r_buff->tail) +  (r_buff->head - R_BUFF_START);
+//	}
+//	if (dist==0){
+//		return 0;
+//	}
+//
+//	if (amount > to_read){
+//		amount = to_read;
+//	}
+//
+//	uint16_t i=0;
+//	while (amount--){
+//		data[i++] = r_buff->buffer[r_buff->tail++];
+//		if (r_buff->tail == R_BUFF_SIZE){
+//			r_buff->tail =0;
+//		}
+//		just_read++;
+//	}
+//	return just_read;
+//}
+//
+//
+//uint16_t uart_rec(void){
+//	if(USART1->SR & USART_SR_RXNE)
+//		return USART1->DR;
+//	else {
+//		return UART_NO_DATA;
+//	}
+//}
+//
+//
+//void uart_send(uint16_t c)
+//{
+//	while (!(USART1->SR & USART_SR_TXE)){
+//		;
+//	}
+//	USART1->DR = c;
+//}
+//
+//
+//void USART1_IRQHandler(void)
+//{
+//	if((USART1->SR & USART_IT_RXNE) != RESET){
+//		char c = USART1->DR;
+//		ring_buffer_write(&r_buff, (uint8_t*)&c, 1);
+//	}
+//}
+//
+//
+//void ring_buffer_init(volatile ring_buff_t * r_buff)
+//{
+//	memset(r_buff, 0, sizeof(ring_buff_t));
+//}
 
