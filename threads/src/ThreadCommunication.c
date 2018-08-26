@@ -64,7 +64,7 @@ int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
-	l3_send_packet(0, (uint8_t*) buf, buf_len);
+	//l3_send_packet(0, (uint8_t*) buf, buf_len);
 	return 1;
 }
 
@@ -176,9 +176,11 @@ void  ThreadCommunication ( void * pvParameters )
 
 
 	for (;;) {
-
+		if(nrf24_dataReady()){
+			asm volatile ("nop");
+		}
 //
-		RadioReceiveCallback();
+	//RadioReceiveCallback();
 
 
 //
