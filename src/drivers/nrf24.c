@@ -442,7 +442,7 @@ void nrf24_send(uint8_t* value)
      
     /* Set to transmitter mode , Power up if needed */
     nrf24_powerUpTx();
-//    _delay_ms(50);
+    _delay_ms(10);
     /* Do we really need to flush TX fifo each time ? */
     #if 1
         /* Pull down chip select */
@@ -470,7 +470,8 @@ void nrf24_send(uint8_t* value)
     /* Start the transmission */
     nrf24_ce_digitalWrite(HIGH);
     while (nrf24_isSending());
-
+    void nrf24_powerUpRx();
+    _delay_ms(10);
 }
 
 uint8_t nrf24_isSending()
@@ -529,7 +530,7 @@ void nrf24_powerUpRx()
     spi_transfer(FLUSH_RX);
     nrf24_csn_digitalWrite(HIGH);
 
-    nrf24_configRegister(STATUS,(1<<RX_DR)|(1<<TX_DS)|(1<<MAX_RT)); 
+    nrf24_configRegister(STATUS,(1<<RX_DR)|(1<<TX_DS)|(1<<MAX_RT));
 
     nrf24_ce_digitalWrite(LOW);    
     nrf24_configRegister(CONFIG,nrf24_CONFIG|((1<<PWR_UP)|(1<<PRIM_RX)));    

@@ -4,9 +4,9 @@
  *  Created on: 03.08.2018
  *      Author: tomek
  */
+#include <ThreadServiceMode.h>
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "ThreadServiceMode.h"
 #include "systemDefines.h"
 
 extern QueueHandle_t logMsgQueue;

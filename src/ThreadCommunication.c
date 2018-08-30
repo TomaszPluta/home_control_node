@@ -5,23 +5,25 @@
  *      Author: tomek
  */
 
+#include <ThreadCommunication.h>
 #include "stm32f10x.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "task.h"
-
-#include "ThreadCommunication.h"
+#include "semphr.h"
 
 #include "nrf24.h"
 
 #include "mqtt_client.h"
 #include "systemDefines.h"
 
-
+SemaphoreHandle_t nrfMutex;
 extern QueueHandle_t logMsgQueue;
 
 
+uint8_t buf[256];
+int buf_len =32;
 
 int client_rec(byte* buf, uint16_t bufLen){
 
@@ -64,8 +66,10 @@ int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
 }
 
 int mqtt_net_write_cb(void *context, const byte* buf, int buf_len, int timeout_ms){
-	//l3_send_packet(0, (uint8_t*) buf, buf_len);
-	return 1;
+
+	l3_send_packet(0, (uint8_t*) buf, buf_len);
+
+	return buf_len;
 }
 
 int mqtt_net_disconnect_cb(void *context){
@@ -74,8 +78,7 @@ int mqtt_net_disconnect_cb(void *context){
 
 
 void RadioReceiveCallback (void){
-	uint8_t buf[256];
-	int buf_len =0;
+
 	uint8_t rxNb = client_rec(buf, buf_len);
 	if (rxNb >0){
 		asm volatile ("nop");
@@ -83,17 +86,21 @@ void RadioReceiveCallback (void){
 }
 
 void EXTI9_5_IRQHandler (void){
+//	xSemaphoreTakeFromISR(nrfMutex, NULL);
 	RadioReceiveCallback();
+//	xSemaphoreGiveFromISR(nrfMutex, NULL);
 	EXTI->PR |= (1<<5);
 }
 
 
 
 
-
+//ISSUE: not working transition between tx and rx. After send there is no possibility to rx pckt
 
 void  ThreadCommunication ( void * pvParameters )
 {
+	nrfMutex = xSemaphoreCreateMutex();
+
 	xQueueSend(logMsgQueue, "communication started", 0);
 
 	vPortEnterCritical();
@@ -172,7 +179,7 @@ void  ThreadCommunication ( void * pvParameters )
 	subscribe.topics = topics;
 
 	MqttClient_Subscribe(&client, &subscribe);
-	//xQueueSend(logMsgQueue, "client subscribe", 0);
+	xQueueSend(logMsgQueue, "client subscribe", 0);
 
 
 	for (;;) {

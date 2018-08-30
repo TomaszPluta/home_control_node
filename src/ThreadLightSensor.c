@@ -6,6 +6,7 @@
  */
 
 #include <stdbool.h>
+#include <ThreadLightSensor.h>
 
 
 #include "FreeRTOS.h"
@@ -15,7 +16,6 @@
 #include "platform.h"
 #include "systemDefines.h"
 #include "messages.h"
-#include "ThreadLightSensor.h"
 
 extern QueueHandle_t internalMsgQueue;
 extern QueueHandle_t logMsgQueue;

@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ThreadCommunication.h>
+#include <ThreadLightSensor.h>
+#include <ThreadServiceMode.h>
+#include <ThreadSupervisor.h>
 #include "stm32f10x.h"
 
 /*Config RTOS includes*/
@@ -14,12 +18,6 @@
 #include "queue.h"
 
 #include "systemDefines.h"
-#include "ThreadLightSensor.h"
-#include "ThreadSupervisor.h"
-#include "ThreadCommunication.h"
-#include "ThreadServiceMode.h"
-
-
 #include "platform.h"
 #include "gpio.h"//
 #include "nrf24.h"//
@@ -55,22 +53,23 @@ void  gpio_init(void){
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
 	 	EnableUart(USART1);
 
+	 	RFM12B_GPIO_Init();
+	 	Rfm12bTest();
 
-
-
-
-	 RTC_Init();
-	 RtcClear();
-	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
-	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
-	 logMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
-
-	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 	xTaskCreate( ThreadCommunication, "Communication", 2048, NULL, tskIDLE_PRIORITY + 1, NULL);
-		xTaskCreate( ThreadServiceMode, "ServiceMode", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-	 	vTaskStartScheduler();
-
+//
+//
+//	 RTC_Init();
+//	 RtcClear();
+//	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
+//	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
+//	 logMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
+//
+//	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
+//	 	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+//	 	xTaskCreate( ThreadCommunication, "Communication", 2048, NULL, tskIDLE_PRIORITY + 1, NULL);
+//		xTaskCreate( ThreadServiceMode, "ServiceMode", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+//	 	vTaskStartScheduler();
+//
 
 
 
