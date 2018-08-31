@@ -41,6 +41,26 @@ void  gpio_init(void){
 	PORT.GPIO_Pin = GPIO_Pin_11;
 	GPIO_Init(GPIOB, &PORT);
 }
+#include "rfm12b.h"
+#include "RFM12B_reg.h"
+
+
+#define RFM12_STATUS_RGIT 	0x8000
+#define RFM12_STATUS_FFIT 	0x8000
+#define RFM12_STATUS_POR 	0x4000
+#define RFM12_STATUS_RGUR 	0x2000
+#define RFM12_STATUS_FFOV 	0x2000
+#define RFM12_STATUS_WKUP 	0x1000
+#define RFM12_STATUS_EXT 	0x0800
+#define RFM12_STATUS_LBD 	0x0400
+#define RFM12_STATUS_FFEM 	0x0200
+#define RFM12_STATUS_ATS 	0x0100
+#define RFM12_STATUS_RSSI 	0x0100
+#define RFM12_STATUS_DQD 	0x0080
+#define RFM12_STATUS_CRL 	0x0040
+#define RFM12_STATUS_ATGL	 0x0020
+
+
 
 
 
@@ -53,9 +73,97 @@ void  gpio_init(void){
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
 	 	EnableUart(USART1);
 
-	 	RFM12B_GPIO_Init();
-	 	Rfm12bTest();
 
+	 	RFM12B_GPIO_Init();
+	 	RFM12B_RXInit();
+
+
+	 	while (1){
+	 		uint16_t status = RFM12B_RDSTATUS();
+
+
+	 		if (status & RFM12_STATUS_RGIT ){
+	 			asm volatile ("nop");
+		 		uint8_t rx = RFM12B_RDFIFO();
+		 		if (rx !=0){
+		 			_delay_ms(10);
+		 		}
+
+	 		}
+	 		if (status & RFM12_STATUS_FFIT ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_POR ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_RGUR ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_FFOV ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_WKUP ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_EXT ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_LBD ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_FFEM ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_ATS ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_RSSI ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_DQD ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_CRL ){
+	 			asm volatile ("nop");
+	 		}
+	 		if (status & RFM12_STATUS_ATGL ){
+	 			asm volatile ("nop");
+	 		}
+
+
+
+
+
+
+
+
+
+
+
+
+			_delay_ms(100);
+
+
+	 	}
+
+//	 	RFM12B_GPIO_Init();
+//
+//	 	Rfm_xmit(SW_RESET);
+//	 	uint16_t status;
+//	 	_delay_ms(250);
+//	 	status = Rfm_xmit(STATUS_READ);
+//	 	status = Rfm_xmit(STATUS_READ);
+//
+//
+//
+//	 	Rfm_init();
+
+
+
+ //https://github.com/das-labor/librfm12/blob/master/src/rfm12.c
+
+//	 	Rfm12bTest();
+//	 	Rfm12bRx();
 //
 //
 //	 RTC_Init();
