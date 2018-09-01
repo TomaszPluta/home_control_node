@@ -79,7 +79,7 @@ uint16_t pos;
 
 void EXTI9_5_IRQHandler (void){
 
-	EXTI_ClearITPendingBit(EXTI_Line1);
+	EXTI_ClearITPendingBit(EXTI_Line5);
 
 		uint16_t status = RFM12B_RDSTATUS();
 
@@ -157,70 +157,108 @@ void EXTI9_5_IRQHandler (void){
 	 	EnableExti(GPIOB, 5, true, false);
 
 	 	RFM12B_GPIO_Init();
-	 	RFM12B_RXInit();
+
+//	 	RFM12B_RXInit();
 
 
-	 	while (1){
-//	 		uint16_t status = RFM12B_RDSTATUS();
+
+	 	 rfInit();
+	 	  _delay_ms(100);	//wymagane opoznienie
+
+	 	  _delay_ms(50);
+	 	  FIFOReset();
+	 	  while(1) {
+
+	 		  waitForData();					//czekaj na dane(low on nIRQ)
+
+	 		  uint8_t rx =  rfRecv();
+	 		  if (rx !=0){
+	 			  if (pos <1024){
+	 				  rxBuff[pos] = rx;
+	 				  pos++;
+	 				  if (pos==100){
+	 					  asm volatile ("nop");
+	 				  }
+	 			  }
+
+	 		  }
+
+	 	  }
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //
-//	 		if (status & RFM12_STATUS_RGIT ){
-//		 		uint8_t rx = RFM12B_RDFIFO();
-//		 		if (rx !=0){
-//		 			_delay_ms(10);
-//		 		}
+//	 	while (1){
+
+//			uint16_t status = RFM12B_RDSTATUS();
 //
+//
+//			if (status & RFM12_STATUS_RGIT ){
+//	 		uint8_t rx = RFM12B_RDFIFO();
+//	 		if (rx !=0){
+//	 			rxBuff[pos] = rx;
+//	 			pos++;
+//	 			if (pos==100){
+//	 				asm volatile ("nop");
+//	 			}
 //	 		}
-//	 		if (status & RFM12_STATUS_FFIT ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_POR ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_RGUR ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_FFOV ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_WKUP ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_EXT ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_LBD ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_FFEM ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_ATS ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_RSSI ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_DQD ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_CRL ){
-//	 			asm volatile ("nop");
-//	 		}
-//	 		if (status & RFM12_STATUS_ATGL ){
-//	 			asm volatile ("nop");
-//	 		}
-
-
-
-
-
-
-
-
-
-
-
+//
+//			}
+//			if (status & RFM12_STATUS_FFIT ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_POR ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_RGUR ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_FFOV ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_WKUP ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_EXT ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_LBD ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_FFEM ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_ATS ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_RSSI ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_DQD ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_CRL ){
+//				asm volatile ("nop");
+//			}
+//			if (status & RFM12_STATUS_ATGL ){
+//				asm volatile ("nop");
+//			}
+//
+//
+//
+//
+//
+//
 
 			_delay_ms(100);
 
@@ -267,7 +305,7 @@ void EXTI9_5_IRQHandler (void){
 
 
 
- }
-
-
-
+// }
+//
+//
+//
