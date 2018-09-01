@@ -84,13 +84,13 @@ void RadioReceiveCallback (void){
 		asm volatile ("nop");
 	}
 }
-
-void EXTI9_5_IRQHandler (void){
-//	xSemaphoreTakeFromISR(nrfMutex, NULL);
-	RadioReceiveCallback();
-//	xSemaphoreGiveFromISR(nrfMutex, NULL);
-	EXTI->PR |= (1<<5);
-}
+//
+//void EXTI9_5_IRQHandler (void){
+////	xSemaphoreTakeFromISR(nrfMutex, NULL);
+//	RadioReceiveCallback();
+////	xSemaphoreGiveFromISR(nrfMutex, NULL);
+//	EXTI->PR |= (1<<5);
+//}
 
 
 
@@ -119,8 +119,8 @@ void  ThreadCommunication ( void * pvParameters )
 	nrf24_tx_address(tx_address);
 	nrf24_rx_address(rx_address);
 
-	SetGpioAsInPullUp(GPIOB, 5);
-	EnableExti(GPIOB, 5, false, true);
+//	SetGpioAsInPullUp(GPIOB, 5);
+//	EnableExti(GPIOB, 5, false, true);
 
 
 //		while (1) {

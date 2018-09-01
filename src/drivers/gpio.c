@@ -118,7 +118,10 @@ void EnableExti(GPIO_TypeDef * gpioPort, uint8_t pinNb, bool rise, bool fall){
 	}
 	if (fall){
 		EXTI->FTSR |= (1<<pinNb);
+		//SetGpioAsInPullUp(GPIOB, 5);
 	}
+
+
 }
 
 
