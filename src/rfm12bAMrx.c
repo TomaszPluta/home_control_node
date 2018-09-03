@@ -60,8 +60,10 @@ void waitForData() {
 }
 
 void rfInit() {
+  writeCmd(0x0000);
   writeCmd(0x80E7); //EL,EF,868band,12.0pF
-  writeCmd(0x8299); //er,!ebb,ET,ES,EX,!eb,!ew,DC
+  //writeCmd(0x8299); //er,!ebb,ET,ES,EX,!eb,!ew,DC
+  writeCmd(8008);
   writeCmd(0xA640); //freq select
   writeCmd(0xC647); //4.8kbps
   writeCmd(0x94A0); //VDI,FAST,134kHz,0dBm,-103dBm

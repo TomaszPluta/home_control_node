@@ -111,7 +111,6 @@ bool IsGpioHigh(GPIO_TypeDef * gpioPort, uint8_t pinNb){
 void EnableExti(GPIO_TypeDef * gpioPort, uint8_t pinNb, bool rise, bool fall){
 	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 	AFIO->EXTICR[1] |= AFIO_EXTICR2_EXTI5_PB;
-	NVIC_EnableIRQ(EXTI9_5_IRQn);
 	EXTI->IMR  |= (1<<pinNb);
 	if (rise){
 		EXTI->RTSR |= (1<<pinNb);
@@ -120,6 +119,7 @@ void EnableExti(GPIO_TypeDef * gpioPort, uint8_t pinNb, bool rise, bool fall){
 		EXTI->FTSR |= (1<<pinNb);
 		//SetGpioAsInPullUp(GPIOB, 5);
 	}
+	NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 
 }

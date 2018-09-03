@@ -74,68 +74,100 @@ void  gpio_init(void){
 //}
 
 
-uint8_t rxBuff[1024];
-uint16_t pos;
+volatile uint8_t rxBuff[1024];
+volatile uint16_t pos;
 
 void EXTI9_5_IRQHandler (void){
-
 	EXTI_ClearITPendingBit(EXTI_Line5);
+
+
+
 
 		uint16_t status = RFM12B_RDSTATUS();
 
-
-		if (status & RFM12_STATUS_RGIT ){
- 		uint8_t rx = RFM12B_RDFIFO();
- 		if (rx !=0){
- 			rxBuff[pos] = rx;
- 			pos++;
- 			if (pos==100){
- 				asm volatile ("nop");
- 			}
- 		}
-
-		}
 		if (status & RFM12_STATUS_FFIT ){
-			asm volatile ("nop");
+			uint8_t rx = RFM12B_RDFIFO();
+			if (rx !=0){
+				if (pos <1024){
+					rxBuff[pos] = rx;
+					pos++;
+					if (pos==100){
+						 GPIOC->ODR &= ~GPIO_Pin_13;
+						asm volatile ("nop");
+					}
+				}
+			}
 		}
-		if (status & RFM12_STATUS_POR ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_RGUR ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_FFOV ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_WKUP ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_EXT ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_LBD ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_FFEM ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_ATS ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_RSSI ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_DQD ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_CRL ){
-			asm volatile ("nop");
-		}
-		if (status & RFM12_STATUS_ATGL ){
-			asm volatile ("nop");
-		}
+
+
+
+
+
+
 
 }
+//
+//
+//
+//	uint16_t status = RFM12B_RDSTATUS();
+//
+//
+//	if (status & RFM12_STATUS_FFIT ){
+//		uint8_t rx = RFM12B_RDFIFO();
+//		if (rx !=0){
+//			if (pos <1024){
+//				rxBuff[pos] = rx;
+//				pos++;
+//				if (pos==100){
+//					asm volatile ("nop");
+//				}
+//			}
+//		}
+//	}
+//
+//}
+//		}
+//		if (status & RFM12_STATUS_FFIT ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_POR ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_RGUR ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_FFOV ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_WKUP ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_EXT ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_LBD ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_FFEM ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_ATS ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_RSSI ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_DQD ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_CRL ){
+//			asm volatile ("nop");
+//		}
+//		if (status & RFM12_STATUS_ATGL ){
+//			asm volatile ("nop");
+//		}
+//
+//}
 
 
 
@@ -152,39 +184,52 @@ void EXTI9_5_IRQHandler (void){
 	 	EnableUart(USART1);
 
 
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-		SetGpioAsInPullUp(GPIOB, 5);
-	 	EnableExti(GPIOB, 5, true, false);
 
 	 	RFM12B_GPIO_Init();
 
-//	 	RFM12B_RXInit();
+	 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+	 	GPIO_InitTypeDef PORT;
+	 	PORT.GPIO_Mode = GPIO_Mode_Out_PP;
+	 	PORT.GPIO_Speed = GPIO_Speed_2MHz;
+	 	PORT.GPIO_Pin = GPIO_Pin_13;
+	 	GPIO_Init(GPIOC, &PORT);
+	 	GPIOC->ODR |= GPIO_Pin_13;
+
+	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+		EnableExti(GPIOB, 5, false, true);
+		SetGpioAsInPullUp(GPIOB, 5);
+
+
+	 	rfInit();
+	 	_delay_ms(100);	//wymagane opoznienie
+
+	 	_delay_ms(50);
+	 	FIFOReset();
 
 
 
-	 	 rfInit();
-	 	  _delay_ms(100);	//wymagane opoznienie
+		 writeCmd(0x8299);
 
-	 	  _delay_ms(50);
-	 	  FIFOReset();
+
 	 	  while(1) {
-
-	 		  waitForData();					//czekaj na dane(low on nIRQ)
-
-	 		  uint8_t rx =  rfRecv();
-	 		  if (rx !=0){
-	 			  if (pos <1024){
-	 				  rxBuff[pos] = rx;
-	 				  pos++;
-	 				  if (pos==100){
-	 					  asm volatile ("nop");
-	 				  }
-	 			  }
-
-	 		  }
-
+//
+//	 		  waitForData();
+//
+//	 		  uint8_t rx =  rfRecv();
+//	 		  if (rx !=0){
+//	 			  if (pos <1024){
+//	 				  rxBuff[pos] = rx;
+//	 				  pos++;
+//	 				  if (pos==100){
+//	 					 GPIOC->ODR &= ~GPIO_Pin_13;
+//	 					  asm volatile ("nop");
+//	 				  }
+//	 			  }
+//
+//	 		  }
 	 	  }
 
+ }
 
 
 
@@ -260,10 +305,10 @@ void EXTI9_5_IRQHandler (void){
 //
 //
 
-			_delay_ms(100);
-
-
-	 	}
+//			_delay_ms(100);
+//
+//
+//	 	}
 
 //	 	RFM12B_GPIO_Init();
 //
