@@ -17,12 +17,32 @@
 {
 	 ; /* Function for sending 16 bits by SPI should be implemented in platform layer file*/
 }
+//
+//void Rfm12bInit() {
+//  Rfm12bSpiInit();
+//  writeCmd(0x0000);
+//  Rfm12bWriteCmd(0x80E7); //EL,EF,868band,12.0pF
+//  writeCmd(8008);
+//  Rfm12bWriteCmd(0xA640); //frequency select
+//  Rfm12bWriteCmd(0xC648); //4,8kbps
+//  Rfm12bWriteCmd(0x94A0); //VDI,FAST,134kHz,0dBm,-103dBm
+//  Rfm12bWriteCmd(0xC2AC); //AL,!ml,DIG,DQD4
+//  Rfm12bWriteCmd(0xCA81); //FIFO8,SYNC,!ff,DR
+//  Rfm12bWriteCmd(0xCED4); //SYNC=2DD4G
+//  Rfm12bWriteCmd(0xC483); //@PWR,NO RSTRIC,!st,!fi,OE,EN
+//  Rfm12bWriteCmd(0x9850); //!mp,90kHz,MAX OUT
+//  Rfm12bWriteCmd(0xCC17); //OB1COB0, LPX,IddyCDDITCBW0
+//  Rfm12bWriteCmd(0xE000); //NOT USE
+//  Rfm12bWriteCmd(0xC800); //NOT USE
+//  Rfm12bWriteCmd(0xC040); //1.66MHz,2.2V
+//}
+
 
 void Rfm12bInit() {
   Rfm12bSpiInit();
-  writeCmd(0x0000);
+  Rfm12bWriteCmd(0x0000);
   Rfm12bWriteCmd(0x80E7); //EL,EF,868band,12.0pF
-  writeCmd(8008);
+  Rfm12bWriteCmd(0x8208); //no tx/rx
   Rfm12bWriteCmd(0xA640); //frequency select
   Rfm12bWriteCmd(0xC648); //4,8kbps
   Rfm12bWriteCmd(0x94A0); //VDI,FAST,134kHz,0dBm,-103dBm
@@ -36,7 +56,6 @@ void Rfm12bInit() {
   Rfm12bWriteCmd(0xC800); //NOT USE
   Rfm12bWriteCmd(0xC040); //1.66MHz,2.2V
 }
-
 
 
 void Rfm12bSendByte(uint8_t byte)
