@@ -20,11 +20,14 @@
 #include "systemDefines.h"
 #include "platform.h"
 #include "gpio.h"//
-#include "nrf24.h"//
 #include "rtc.h"
+#include "__rfm12b.h"
+
 QueueHandle_t internalMsgQueue;
 QueueHandle_t externalMsgQueue;
 QueueHandle_t logMsgQueue;
+
+
 
 void  gpio_init(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -41,8 +44,7 @@ void  gpio_init(void){
 	PORT.GPIO_Pin = GPIO_Pin_11;
 	GPIO_Init(GPIOB, &PORT);
 }
-#include "rfm12b.h"
-#include "RFM12B_reg.h"
+
 
 
 #define RFM12_STATUS_RGIT 	0x8000
@@ -83,17 +85,17 @@ void EXTI9_5_IRQHandler (void){
 
 
 
-		uint16_t status = RFM12B_RDSTATUS();
+		uint16_t status = Rfm12bWriteCmd(0x0000);
 
 		if (status & RFM12_STATUS_FFIT ){
-			uint8_t rx = RFM12B_RDFIFO();
+			uint8_t rx = rfm12bReadFifo();
 				if (pos <1024){
 					rxBuff[pos] = rx;
 					pos++;
 					if (pos==30){
 						 GPIOC->ODR &= ~GPIO_Pin_13;
 						asm volatile ("nop");
-					 	FIFOReset();
+						rfm12bFifoReset();
 					 	pos =0;
 					}
 			}
@@ -106,77 +108,11 @@ void EXTI9_5_IRQHandler (void){
 
 
 }
-//
-//
-//
-//	uint16_t status = RFM12B_RDSTATUS();
-//
-//
-//	if (status & RFM12_STATUS_FFIT ){
-//		uint8_t rx = RFM12B_RDFIFO();
-//		if (rx !=0){
-//			if (pos <1024){
-//				rxBuff[pos] = rx;
-//				pos++;
-//				if (pos==100){
-//					asm volatile ("nop");
-//				}
-//			}
-//		}
-//	}
-//
-//}
-//		}
-//		if (status & RFM12_STATUS_FFIT ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_POR ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_RGUR ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_FFOV ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_WKUP ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_EXT ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_LBD ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_FFEM ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_ATS ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_RSSI ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_DQD ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_CRL ){
-//			asm volatile ("nop");
-//		}
-//		if (status & RFM12_STATUS_ATGL ){
-//			asm volatile ("nop");
-//		}
-//
-//}
 
 
 
 
  int main(){
-
-
-
-
 
 	 	EnableGpioClk(LOG_UART_PORT);
 	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);
@@ -185,7 +121,6 @@ void EXTI9_5_IRQHandler (void){
 
 
 
-	 	RFM12B_GPIO_Init();
 
 	 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 	 	GPIO_InitTypeDef PORT;
@@ -200,33 +135,15 @@ void EXTI9_5_IRQHandler (void){
 		SetGpioAsInPullUp(GPIOB, 5);
 
 
-	 	rfInit();
+		Rfm12bInit();
 	 	_delay_ms(100);	//wymagane opoznienie
 
-	 	_delay_ms(50);
-	 	FIFOReset();
-
-
-
-		 writeCmd(0x8299);
+		rfm12bFifoReset();
+		rfm12bSwitchRx();
 
 
 	 	  while(1) {
-//
-//	 		  waitForData();
-//
-//	 		  uint8_t rx =  rfRecv();
-//	 		  if (rx !=0){
-//	 			  if (pos <1024){
-//	 				  rxBuff[pos] = rx;
-//	 				  pos++;
-//	 				  if (pos==100){
-//	 					 GPIOC->ODR &= ~GPIO_Pin_13;
-//	 					  asm volatile ("nop");
-//	 				  }
-//	 			  }
-//
-//	 		  }
+
 	 	  }
 
  }
