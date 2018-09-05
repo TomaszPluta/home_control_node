@@ -87,15 +87,15 @@ void EXTI9_5_IRQHandler (void){
 
 		if (status & RFM12_STATUS_FFIT ){
 			uint8_t rx = RFM12B_RDFIFO();
-			if (rx !=0){
 				if (pos <1024){
 					rxBuff[pos] = rx;
 					pos++;
-					if (pos==100){
+					if (pos==30){
 						 GPIOC->ODR &= ~GPIO_Pin_13;
 						asm volatile ("nop");
+					 	FIFOReset();
+					 	pos =0;
 					}
-				}
 			}
 		}
 
