@@ -78,6 +78,7 @@ void  gpio_init(void){
 
 volatile uint8_t rxBuff[1024];
 volatile uint16_t pos;
+volatile bool rx_flag;
 
 void EXTI9_5_IRQHandler (void){
 	EXTI_ClearITPendingBit(EXTI_Line5);
@@ -93,10 +94,11 @@ void EXTI9_5_IRQHandler (void){
 					rxBuff[pos] = rx;
 					pos++;
 					if (pos==30){
-						 GPIOC->ODR &= ~GPIO_Pin_13;
+						 GPIOC->ODR ^= GPIO_Pin_13;
 						asm volatile ("nop");
 						rfm12bFifoReset();
 					 	pos =0;
+					 	rx_flag = true;
 					}
 			}
 		}
@@ -114,6 +116,19 @@ void EXTI9_5_IRQHandler (void){
 
  int main(){
 
+//		RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPARST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPBRST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPCRST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPDRST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPERST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
+//
+//		RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST;
+//		RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
+
+	//    RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
+
 	 	EnableGpioClk(LOG_UART_PORT);
 	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
@@ -130,19 +145,38 @@ void EXTI9_5_IRQHandler (void){
 	 	GPIO_Init(GPIOC, &PORT);
 	 	GPIOC->ODR |= GPIO_Pin_13;
 
-	    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-		EnableExti(GPIOB, 5, false, true);
-		SetGpioAsInPullUp(GPIOB, 5);
 
 
 		Rfm12bInit();
-	 	_delay_ms(100);	//wymagane opoznienie
+	 	_delay_ms(1000);	//wymagane opoznienie
+
+	 	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	 			EnableExti(GPIOB, 5, false, true);
+	 			SetGpioAsInPullUp(GPIOB, 5);
+
 
 		rfm12bFifoReset();
 		rfm12bSwitchRx();
 
 
 	 	  while(1) {
+	 		  if (rx_flag){
+	 			//  rfm12bSwitchTx();
+	 		//	  _delay_ms(50);
+
+	 			  uint8_t buff[] = "goodyFive!1helloWorld2helloWorld3";
+	 			  //Rfm12bSendBuff(buff, 30);
+	 			 RF12_TXPACKET(buff, 30);
+
+	 			  _delay_ms(250);
+	 			// rfm12bFifoReset();
+	 			  rfm12bSwitchRx();
+	 			  _delay_ms(20);
+
+
+	 			  rx_flag = false;
+
+	 		  }
 
 	 	  }
 

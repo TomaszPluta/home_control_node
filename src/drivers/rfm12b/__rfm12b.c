@@ -75,6 +75,9 @@ void Rfm12bSendByte(uint8_t byte)
 
 
 
+
+
+
 void rfSend(unsigned char data)
 {
 	uint16_t temp=0xB800, status=0x0000;
@@ -89,6 +92,37 @@ void rfSend(unsigned char data)
 
 	Rfm12bWriteCmd(temp);
 }
+
+
+void RF12_SCAN(void)
+{
+	Rfm12bWriteCmd(0x0000);
+	Rfm12bWriteCmd(0x82C9);
+	Rfm12bWriteCmd(0xCA81);
+	Rfm12bWriteCmd(0xCA83);
+}
+
+
+void RF12_TXPACKET(uint8_t *buff, uint8_t bytesNb)
+{
+	char i;
+
+	Rfm12bSendByte(0x0000);//read status register
+	Rfm12bSendByte(0x8239);//!er,!ebb,ET,ES,EX,!eb,!ew,DC
+	Rfm12bSendByte(0xAA);//PREAMBLE
+	Rfm12bSendByte(0xAA);//PREAMBLE
+	Rfm12bSendByte(0xAA);//PREAMBLE
+	Rfm12bSendByte(0x2D);//SYNC HI BYTE
+	Rfm12bSendByte(0xD4);//SYNC LOW BYTE
+	for(i = 0; i < bytesNb; i++)
+	{
+		Rfm12bSendByte(buff[i]);
+	}
+	Rfm12bSendByte(0xAA);
+	Rfm12bSendByte(0xAA);
+	RF12_SCAN();
+}
+
 
 
 
