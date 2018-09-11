@@ -1,3 +1,5 @@
+core_cm3.h:930:22:NVIC_EnableIRQ	16	static
+core_cm3.h:943:22:NVIC_DisableIRQ	16	static
 main.c:32:7:gpio_init	16	static
 main.c:83:6:EXTI9_5_IRQHandler	16	static
-main.c:117:6:main	56	static
+main.c:110:6:main	56	static

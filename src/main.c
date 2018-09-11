@@ -102,13 +102,6 @@ void EXTI9_5_IRQHandler (void){
 					}
 			}
 		}
-
-
-
-
-
-
-
 }
 
 
@@ -147,36 +140,73 @@ void EXTI9_5_IRQHandler (void){
 
 
 
-		Rfm12bInit();
+
+	 	Rfm12bInit();
 	 	_delay_ms(1000);	//wymagane opoznienie
+	 	  Rfm12bWriteCmd(0x0000);
+	 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	 	EnableExti(GPIOB, 5, false, true);
+	 	SetGpioAsInPullUp(GPIOB, 5);
+		SetGpioAsInPullUp(GPIOB, 11);
 
-	 	  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	 			EnableExti(GPIOB, 5, false, true);
-	 			SetGpioAsInPullUp(GPIOB, 5);
-
-
-		rfm12bFifoReset();
-		rfm12bSwitchRx();
+	 	rfm12bFifoReset();
+	 	rfm12bSwitchRx();
 
 
 	 	  while(1) {
 	 		  if (rx_flag){
-	 			//  rfm12bSwitchTx();
-	 		//	  _delay_ms(50);
 
-	 			  uint8_t buff[] = "goodyFive!1helloWorld2helloWorld3";
-	 			  //Rfm12bSendBuff(buff, 30);
-	 			 RF12_TXPACKET(buff, 30);
+	 			  NVIC_DisableIRQ(EXTI9_5_IRQn);
+	 			  rfm12bSwitchTx();
 
+	 			  _delay_ms(50);
+
+	 			  uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
+	 			  //  Rfm12bSendBuff(buff, 30);
+	 			  RF12_TXPACKET(buff, 30);
+	 			  NVIC_EnableIRQ(EXTI9_5_IRQn);
 	 			  _delay_ms(250);
-	 			// rfm12bFifoReset();
 	 			  rfm12bSwitchRx();
 	 			  _delay_ms(20);
+
+//	 			//  rfm12bSwitchTx();
+//	 		//	  _delay_ms(50);
+//
+//	 			  uint8_t buff[] = "goodyFive!1helloWorld2helloWorld3";
+//	 			  //Rfm12bSendBuff(buff, 30);
+//	 			 RF12_TXPACKET(buff, 30);
+//
+//	 			  _delay_ms(250);
+//	 			// rfm12bFifoReset();
+//	 			  rfm12bSwitchRx();
+//	 			  _delay_ms(20);
 
 
 	 			  rx_flag = false;
 
 	 		  }
+
+
+
+	 		 if (!(GPIOB->IDR & (1<<11))){
+
+	 			 NVIC_DisableIRQ(EXTI9_5_IRQn);
+	 			 rfm12bSwitchTx();
+
+	 			 _delay_ms(50);
+
+	 			 uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
+	 			 //  Rfm12bSendBuff(buff, 30);
+	 			 RF12_TXPACKET(buff, 30);
+	 			 _delay_ms(250);
+	 			 NVIC_EnableIRQ(EXTI9_5_IRQn);
+	 			 rfm12bSwitchRx();
+	 			 _delay_ms(20);
+
+
+
+
+	 		 }
 
 	 	  }
 
