@@ -246,15 +246,6 @@ void nRF24_restore_defaults(void) {
 }
 
 
-void _delay_ms(int n) {
-
-	int i, j;
-	j= n*1000;
-	while(j--) {
-		i=2;
-		while(i--);
-	}
-}
 
 /* init the hardware pins */
 void nrf24_init() 
