@@ -7,22 +7,14 @@
 
 #include "__rfm12b.h"
 #include "__rfm12b_platform.h"
+#include "stdint.h"
+#include "stdbool.h"
 
 
 /* SPI CS LOW and High should be declared in platform layer file
 #define NSEL_RFM12_LOW
 #define NSEL_RFM12_HIGH
 */
-
-
- __attribute__((weak)) void Rfm12bSpiInit(void) {
-	 ; /* Function for SPI init should be implemented in platform layer file*/
- }
-
- __attribute__((weak)) void WriteCmd( uint16_t CMD )
-{
-	 ; /* Function for sending 16 bits by SPI should be implemented in platform layer file*/
-}
 
 void Rfm12bInit() {
   Rfm12bSpiInit();
@@ -43,7 +35,10 @@ void Rfm12bInit() {
   Rfm12bWriteCmd(0xC040); //1.66MHz,2.2V
 }
 
-
+void Rrm12bObjInit (volatile rfm12bObj_t * rfm12bObj){
+	memset(rfm12bObj, 0, sizeof(rfm12bObj_t));
+	rfm12bObj->state = receive;
+}
 
 void Rfm12bSendByte(uint8_t byte)
 {
@@ -51,7 +46,7 @@ void Rfm12bSendByte(uint8_t byte)
 	uint16_t cmdAndData = 0xB800;
 	cmdAndData |= byte;
 
-	while(!status)// brakuje chyba tu inicjalizacji statusu
+	while(!status)//
 	{
 		status = Rfm12bWriteCmd(0x0000);
 		status = status & 0x8000;
@@ -63,12 +58,13 @@ void Rfm12bSendByte(uint8_t byte)
 
 
 
-void rfSend(unsigned char data)
+static void rfSend(uint8_t data)
 {
-	uint16_t temp=0xB800, status=0x0000;
+	uint16_t temp=0xB800;
+	uint16_t status=0x0000;
 	temp|=data;
 
-	while(  !status )
+	if (  !status )
 	{
 		//status = RFM12B_RDSTATUS();
 		status = Rfm12bWriteCmd(0x0000);
@@ -79,22 +75,62 @@ void rfSend(unsigned char data)
 }
 
 
+void Rfm12bStartSending (volatile rfm12bObj_t * rfm12b, uint8_t *data, uint8_t dataNb){
 
-
-
-void Rfm12bSendBuff(uint8_t *buff, uint8_t bytesNb)
-{
-//	dziala tylko z komenda rfSend zaimportowana z innego modulu
-	WriteCmd(0x0000);
-	rfSend(0xAA); // PREAMBLE
+	rfm12b->txBuff.data[0] = 0xAA;
+	rfm12b->txBuff.data[1] = 0x2D;
+	rfm12b->txBuff.data[2] = 0xD4;
+	memcpy((void*)&rfm12b->txBuff.data[3], data, dataNb);
+	rfm12b->txBuff.pos =0;
+	rfm12b->txBuff.dataNb = dataNb + RFM12_PREMBLE_LEN;
+    rfm12bSwitchTx();
+    rfm12b->state = transmit;
 	rfSend(0xAA);
-	rfSend(0xAA);
-	rfSend(0x2D); // SYNC
-	rfSend(0xD4);
+}
 
-	for (uint16_t i=0; i< bytesNb; i++)
-	{
-		rfSend(buff[i]);		//wyslij kolejny znak z bufora
+
+
+static void Rfm12bTranssmitSeqByte(volatile rfm12bBuff_t * txBuff){
+	uint16_t cmd = 0xB800;
+	uint8_t data = txBuff->data[txBuff->pos++];
+	Rfm12bWriteCmd(cmd | data);
+}
+
+void Rfm12bMantainSending(volatile rfm12bObj_t * rfm12b){
+	 if (rfm12b->txBuff.pos < rfm12b->txBuff.dataNb){
+		 Rfm12bTranssmitSeqByte(&rfm12b->txBuff);
+	 } else{
+		 rfm12b->state = receive;
+		 rfm12bSwitchRx();
+	 }
+}
+
+
+
+void Rfm12bMantainreceiving(volatile rfm12bObj_t * rfm12b){
+	uint8_t rxByte = rfm12bReadFifo();
+	if (rfm12b->rxBuff.pos < RFM12_MAX_FRAME_SIZE){
+		rfm12b->rxBuff.data[rfm12b->rxBuff.pos] = rxByte;
+		rfm12b->rxBuff.pos++;
+		if (rfm12b->rxBuff.pos==30){
+			GPIOC->ODR ^= GPIO_Pin_13;
+			rfm12b->rxBuff.pos = 0;
+			rfm12bFifoReset();
+		}
+	}
+}
+
+
+void Rfm12bIrqCallback (volatile rfm12bObj_t * rfm12b){
+	uint16_t status = Rfm12bWriteCmd(0x0000);
+
+	if (status & RFM12_STATUS_FFIT ){
+		if (rfm12b->state == transmit){
+			Rfm12bMantainSending(rfm12b);
+		}
+		else{
+			Rfm12bMantainreceiving(rfm12b);
+		}
 	}
 }
 
@@ -114,8 +150,6 @@ void RF12_TXPACKET(uint8_t *buff, uint8_t bytesNb)
 
 	char i;
 	WriteCmd(0x0000);
-	rfSend(0x0000);//read status register
-	rfSend(0x8239);//!er,!ebb,ET,ES,EX,!eb,!ew,DC
 	rfSend(0xAA);//PREAMBLE
 	rfSend(0xAA);//PREAMBLE
 	rfSend(0xAA);//PREAMBLE
@@ -130,9 +164,6 @@ void RF12_TXPACKET(uint8_t *buff, uint8_t bytesNb)
 	rfSend(0xAA);
 	RF12_SCAN();
 }
-
-
-
 
 
 

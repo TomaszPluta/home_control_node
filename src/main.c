@@ -27,7 +27,7 @@ QueueHandle_t internalMsgQueue;
 QueueHandle_t externalMsgQueue;
 QueueHandle_t logMsgQueue;
 
-
+volatile rfm12bObj_t rfm12bObj;
 
 void  gpio_init(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -82,46 +82,14 @@ volatile bool rx_flag;
 
 void EXTI9_5_IRQHandler (void){
 	EXTI_ClearITPendingBit(EXTI_Line5);
+	Rfm12bIrqCallback(&rfm12bObj);
 
-
-
-
-		uint16_t status = Rfm12bWriteCmd(0x0000);
-
-		if (status & RFM12_STATUS_FFIT ){
-			uint8_t rx = rfm12bReadFifo();
-				if (pos <1024){
-					rxBuff[pos] = rx;
-					pos++;
-					if (pos==30){
-						 GPIOC->ODR ^= GPIO_Pin_13;
-						asm volatile ("nop");
-						rfm12bFifoReset();
-					 	pos =0;
-					 	rx_flag = true;
-					}
-			}
-		}
 }
 
 
 
 
  int main(){
-
-//		RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPARST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPBRST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPCRST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPDRST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_IOPERST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
-//
-//		RCC->APB2RSTR |= RCC_APB2RSTR_AFIORST;
-//		RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
-
-	//    RCC->APB2RSTR |= RCC_APB2RSTR_SPI1RST;
-
 	 	EnableGpioClk(LOG_UART_PORT);
 	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
@@ -149,159 +117,25 @@ void EXTI9_5_IRQHandler (void){
 	 	SetGpioAsInPullUp(GPIOB, 5);
 		SetGpioAsInPullUp(GPIOB, 11);
 
+
 	 	rfm12bFifoReset();
 	 	rfm12bSwitchRx();
 
-
-	 	  while(1) {
-	 		  if (rx_flag){
-
-	 			  NVIC_DisableIRQ(EXTI9_5_IRQn);
-	 			  rfm12bSwitchTx();
-
-	 			  _delay_ms(50);
-
-	 			  uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
-	 			  //  Rfm12bSendBuff(buff, 30);
-	 			  RF12_TXPACKET(buff, 30);
-	 			  NVIC_EnableIRQ(EXTI9_5_IRQn);
-	 			  _delay_ms(250);
-	 			  rfm12bSwitchRx();
-	 			  _delay_ms(20);
-
-//	 			//  rfm12bSwitchTx();
-//	 		//	  _delay_ms(50);
-//
-//	 			  uint8_t buff[] = "goodyFive!1helloWorld2helloWorld3";
-//	 			  //Rfm12bSendBuff(buff, 30);
-//	 			 RF12_TXPACKET(buff, 30);
-//
-//	 			  _delay_ms(250);
-//	 			// rfm12bFifoReset();
-//	 			  rfm12bSwitchRx();
-//	 			  _delay_ms(20);
+	 	 NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 
-	 			  rx_flag = false;
+	 	Rrm12bObjInit (&rfm12bObj);
 
-	 		  }
+		 	while (1){
 
+		 		  if (!(GPIOB->IDR & (1<<11))){
+		 			  uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
+		 			  Rfm12bStartSending(&rfm12bObj, buff, 30);
+		 			 _delay_ms(250);
+		 		  }
+		 	}
+	}
 
-
-	 		 if (!(GPIOB->IDR & (1<<11))){
-
-	 			 NVIC_DisableIRQ(EXTI9_5_IRQn);
-	 			 rfm12bSwitchTx();
-
-	 			 _delay_ms(50);
-
-	 			 uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
-	 			 //  Rfm12bSendBuff(buff, 30);
-	 			 RF12_TXPACKET(buff, 30);
-	 			 _delay_ms(250);
-	 			 NVIC_EnableIRQ(EXTI9_5_IRQn);
-	 			 rfm12bSwitchRx();
-	 			 _delay_ms(20);
-
-
-
-
-	 		 }
-
-	 	  }
-
- }
-
-
-
-
-
-
-
-
-
-
-
-//
-//
-//	 	while (1){
-
-//			uint16_t status = RFM12B_RDSTATUS();
-//
-//
-//			if (status & RFM12_STATUS_RGIT ){
-//	 		uint8_t rx = RFM12B_RDFIFO();
-//	 		if (rx !=0){
-//	 			rxBuff[pos] = rx;
-//	 			pos++;
-//	 			if (pos==100){
-//	 				asm volatile ("nop");
-//	 			}
-//	 		}
-//
-//			}
-//			if (status & RFM12_STATUS_FFIT ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_POR ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_RGUR ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_FFOV ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_WKUP ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_EXT ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_LBD ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_FFEM ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_ATS ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_RSSI ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_DQD ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_CRL ){
-//				asm volatile ("nop");
-//			}
-//			if (status & RFM12_STATUS_ATGL ){
-//				asm volatile ("nop");
-//			}
-//
-//
-//
-//
-//
-//
-
-//			_delay_ms(100);
-//
-//
-//	 	}
-
-//	 	RFM12B_GPIO_Init();
-//
-//	 	Rfm_xmit(SW_RESET);
-//	 	uint16_t status;
-//	 	_delay_ms(250);
-//	 	status = Rfm_xmit(STATUS_READ);
-//	 	status = Rfm_xmit(STATUS_READ);
-//
-//
-//
-//	 	Rfm_init();
 
 
 
