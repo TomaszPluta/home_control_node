@@ -33,7 +33,7 @@ extern "C" {
 #define RFM12_STATUS_CRL 	0x0040
 #define RFM12_STATUS_ATGL	0x0020
 
-#define RFM12_PREMBLE_LEN  	      (4)
+#define RFM12_PREMBLE_LEN  	      (5)
 #define RFM12_MAX_FRAME_SIZE  	(256)
 
 
