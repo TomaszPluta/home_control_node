@@ -75,6 +75,12 @@ static void rfSend(uint8_t data)
 }
 
 
+
+void Rfm12bClearBuff (rfm12bBuff_t * rfm12bBuff){
+	rfm12bBuff->dataNb = 0;
+	rfm12bBuff->pos = 0;
+}
+
 void Rfm12bStartSending (volatile rfm12bObj_t * rfm12b, uint8_t *data, uint8_t dataNb){
 
 	rfm12b->txBuff.data[0] = 0xAA;
@@ -110,9 +116,11 @@ void Rfm12bMantainSending(volatile rfm12bObj_t * rfm12b){
 void Rfm12bMantainreceiving(volatile rfm12bObj_t * rfm12b){
 	uint8_t rxByte = rfm12bReadFifo();
 	if (rfm12b->rxBuff.pos < RFM12_MAX_FRAME_SIZE){
-		rfm12b->rxBuff.data[rfm12b->rxBuff.pos] = rxByte;
-		rfm12b->rxBuff.pos++;
-		if (rfm12b->rxBuff.pos==30){
+		rfm12b->rxBuff.data[rfm12b->rxBuff.pos++] = rxByte;
+		rfm12b->rxBuff.dataNb = 30; //
+		if (rfm12b->rxBuff.pos == rfm12b->rxBuff.dataNb){
+			memcpy(&rfm12b->completedRxBuff,  &rfm12b->rxBuff, sizeof(rfm12bBuff_t));
+			Rfm12bClearBuff(&rfm12b->rxBuff);
 			GPIOC->ODR ^= GPIO_Pin_13;
 			rfm12b->rxBuff.pos = 0;
 			rfm12bFifoReset();

@@ -2,20 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <ThreadCommunication.h>
-#include <ThreadLightSensor.h>
-#include <ThreadServiceMode.h>
-#include <ThreadSupervisor.h>
+
 #include "stm32f10x.h"
 
-/*Config RTOS includes*/
-#include "FreeRTOSConfig.h"
-/*Kernel includes*/
-#include "FreeRTOS.h"
-#include "task.h"
-#include "timers.h"
-#include "semphr.h"
-#include "queue.h"
+
+#include "mqtt_client.h"
 
 #include "systemDefines.h"
 #include "platform.h"
@@ -23,11 +14,56 @@
 #include "rtc.h"
 #include "__rfm12b.h"
 
-QueueHandle_t internalMsgQueue;
-QueueHandle_t externalMsgQueue;
-QueueHandle_t logMsgQueue;
+
+
 
 volatile rfm12bObj_t rfm12bObj;
+
+uint8_t client_rec(uint8_t * buf, uint8_t buf_len);
+
+int mqtt_message_cb(struct _MqttClient *client, MqttMessage *message, byte msg_new, byte msg_done){
+	return 1;
+}
+
+int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeout_ms){
+	return 1;
+}
+
+int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
+
+	uint32_t enterTimestamp = xTaskGetTickCount();
+	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
+		uint8_t rxNb = client_rec(buf, buf_len);
+		if (rxNb >0){
+			return rxNb;
+		}
+	}
+	return -1;
+}
+
+int mqtt_net_write_cb(void *context, const byte* buff, int buffLen, int timeout_ms){
+
+	rfm12bObj_t * obj = (rfm12bObj_t*) context;
+	Rfm12bStartSending(obj, (uint8_t *)buff, buffLen);
+	return buffLen;
+}
+
+int mqtt_net_disconnect_cb(void *context){
+	return 0;
+}
+
+
+
+
+uint8_t client_rec(uint8_t * buf, uint8_t buf_len){
+	uint8_t byteNb = rfm12bObj.completedRxBuff.dataNb;
+	if (byteNb > 0){
+		byteNb = (byteNb < buf_len) ? byteNb : buf_len;
+		memcpy (buf, rfm12bObj.completedRxBuff.data, byteNb);
+	}
+	return byteNb;
+}
+
 
 void  gpio_init(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -95,9 +131,6 @@ void EXTI9_5_IRQHandler (void){
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
 	 	EnableUart(USART1);
 
-
-
-
 	 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 	 	GPIO_InitTypeDef PORT;
 	 	PORT.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -107,11 +140,9 @@ void EXTI9_5_IRQHandler (void){
 	 	GPIOC->ODR |= GPIO_Pin_13;
 
 
-
-
 	 	Rfm12bInit();
 	 	_delay_ms(1000);	//wymagane opoznienie
-	 	  Rfm12bWriteCmd(0x0000);
+	 	Rfm12bWriteCmd(0x0000);
 	 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 	 	EnableExti(GPIOB, 5, false, true);
 	 	SetGpioAsInPullUp(GPIOB, 5);
@@ -120,21 +151,73 @@ void EXTI9_5_IRQHandler (void){
 
 	 	rfm12bFifoReset();
 	 	rfm12bSwitchRx();
-
-	 	 NVIC_EnableIRQ(EXTI9_5_IRQn);
-
-
+	 	NVIC_EnableIRQ(EXTI9_5_IRQn);
 	 	Rrm12bObjInit (&rfm12bObj);
 
-		 	while (1){
+	 	RTC_Init();
+	 	RtcClear();
 
-		 		  if (!(GPIOB->IDR & (1<<11))){
-		 			  uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
-		 			  Rfm12bStartSending(&rfm12bObj, buff, 30);
-		 			 _delay_ms(250);
-		 		  }
-		 	}
-	}
+
+
+		const char * infoTxt = "Start Mqtt client";
+	 	SendUart1Dma(infoTxt, strlen(infoTxt));
+
+
+	 		MqttNet net;
+	 		MqttClient client;
+	 		net.context = &rfm12bObj;
+	 		net.connect = mqt_net_connect_cb;
+	 		net.read = mqtt_net_read_cb;
+	 		net.write = mqtt_net_write_cb;
+	 		net.disconnect = mqtt_net_disconnect_cb;
+
+	 		uint8_t tx_buf[BUF_SIZE_TX];
+	 		uint8_t rx_buf[BUF_SIZE_RX];
+	 		MqttClient_Init(&client, &net, mqtt_message_cb, tx_buf, BUF_SIZE_TX, rx_buf, BUF_SIZE_RX, CMD_TIMEOUT_MS);
+
+	 		MqttConnect mqtt_con;
+	 		mqtt_con.clean_session =0;
+	 		mqtt_con.client_id = "rt1";
+	 		mqtt_con.enable_lwt = 0;
+	 		mqtt_con.keep_alive_sec =30;
+	 		mqtt_con.stat = MQTT_MSG_BEGIN;
+	 		mqtt_con.username ="bedroomTMP1";
+	 		mqtt_con.password = "passw0rd";
+	 		MqttClient_Connect(&client, &mqtt_con);
+
+	 		const char* test_topic1 = "flat/livingroom/temp/1";
+	 		const char* test_topic2 = "flat/bedroom/humidity/2";
+	 		MqttTopic topics[2];
+	 		topics[0].qos =1;
+	 		topics[0].topic_filter = test_topic1;
+	 	    topics[1].qos =1;
+	 		topics[1].topic_filter = test_topic2;
+
+
+	 		MqttSubscribe subscribe;
+	 		subscribe.packet_id = 1;
+	 		uint8_t topic_count = 2;
+	 		subscribe.topic_count = topic_count;
+	 		subscribe.topics = topics;
+
+	 		MqttClient_Subscribe(&client, &subscribe);
+
+
+
+
+
+
+
+
+	 	while (1){
+
+	 		if (!(GPIOB->IDR & (1<<11))){
+	 			uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
+	 			Rfm12bStartSending(&rfm12bObj, buff, 30);
+	 			_delay_ms(250);
+	 		}
+	 	}
+ }
 
 
 

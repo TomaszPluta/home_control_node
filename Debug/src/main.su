@@ -1,4 +1,10 @@
 core_cm3.h:930:22:NVIC_EnableIRQ	16	static
-main.c:32:7:gpio_init	16	static
-main.c:83:6:EXTI9_5_IRQHandler	8	static
-main.c:92:6:main	56	static
+main.c:24:5:mqtt_message_cb	24	static
+main.c:28:5:mqt_net_connect_cb	24	static
+main.c:32:5:mqtt_net_read_cb	32	static
+main.c:44:5:mqtt_net_write_cb	32	static
+main.c:51:5:mqtt_net_disconnect_cb	16	static
+main.c:58:9:client_rec	24	static
+main.c:68:7:gpio_init	16	static
+main.c:119:6:EXTI9_5_IRQHandler	8	static
+main.c:128:6:main	536	static

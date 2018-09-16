@@ -152,7 +152,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRTOS/source"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Libraries"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="mqttClient/src"/>
-						<entry excluding="drivers/rfm12b/__rfm12b2KOPIA.c|rfm12.c|threads/threadsSrc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="ThreadTemperatureSensor.c|ThreadSupervisor.c|ThreadServiceMode.c|ThreadLightSensor.c|ThreadHealthMonitor.c|ThreadCommunication.c|drivers/rfm12b/__rfm12b2KOPIA.c|rfm12.c|threads/threadsSrc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -269,7 +269,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Libraries"/>
-						<entry excluding="drivers/rfm12b/__rfm12b2KOPIA.c|rfm12.c|threads/threadsSrc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="ThreadTemperatureSensor.c|ThreadSupervisor.c|ThreadServiceMode.c|ThreadLightSensor.c|ThreadHealthMonitor.c|ThreadCommunication.c|drivers/rfm12b/__rfm12b2KOPIA.c|rfm12.c|threads/threadsSrc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
