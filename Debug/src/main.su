@@ -7,4 +7,5 @@ main.c:51:5:mqtt_net_disconnect_cb	16	static
 main.c:58:9:client_rec	24	static
 main.c:68:7:gpio_init	16	static
 main.c:119:6:EXTI9_5_IRQHandler	8	static
-main.c:128:6:main	536	static
+main.c:127:6:StartSystick	16	static
+main.c:135:6:main	536	static

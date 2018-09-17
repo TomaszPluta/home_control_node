@@ -124,8 +124,17 @@ void EXTI9_5_IRQHandler (void){
 
 
 
+void StartSystick(voi){
+	SysTick->LOAD = 72000 - 1;
+	SysTick->VAL = 0;
+	SysTick->CTRL |= SysTick_CTRL_ENABLE;
+}
+
+
+
 
  int main(){
+	 	StartSystick();
 	 	EnableGpioClk(LOG_UART_PORT);
 	 	SetGpioAsOutAltPushPUll(LOG_UART_PORT, LOG_UART_PIN_TX);
 	 	SetGpioAsInFloating(LOG_UART_PORT, LOG_UART_PIN_RX);
