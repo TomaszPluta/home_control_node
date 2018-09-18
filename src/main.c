@@ -15,6 +15,15 @@
 #include "__rfm12b.h"
 
 
+volatile uint8_t rxBuff[1024];
+volatile uint16_t pos;
+volatile bool rx_flag;
+volatile uint32_t systickMsIRQ;
+
+
+ uint32_t GetTickCount(void){
+	 return systickMsIRQ;
+}
 
 
 volatile rfm12bObj_t rfm12bObj;
@@ -30,9 +39,8 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 }
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
-
-	uint32_t enterTimestamp = xTaskGetTickCount();
-	while (xTaskGetTickCount() - enterTimestamp  > timeout_ms){
+	uint32_t enterTimestamp = GetTickCount();
+	while (GetTickCount() - enterTimestamp  > timeout_ms){
 		uint8_t rxNb = client_rec(buf, buf_len);
 		if (rxNb >0){
 			return rxNb;
@@ -112,9 +120,6 @@ void  gpio_init(void){
 //}
 
 
-volatile uint8_t rxBuff[1024];
-volatile uint16_t pos;
-volatile bool rx_flag;
 
 void EXTI9_5_IRQHandler (void){
 	EXTI_ClearITPendingBit(EXTI_Line5);
@@ -124,14 +129,16 @@ void EXTI9_5_IRQHandler (void){
 
 
 
-void StartSystick(voi){
+void StartSystick(void){
 	SysTick->LOAD = 72000 - 1;
 	SysTick->VAL = 0;
-	SysTick->CTRL |= SysTick_CTRL_ENABLE;
+	SysTick->CTRL |= SysTick_CTRL_ENABLE | SysTick_CTRL_TICKINT;
 }
 
 
-
+void SysTick_Handler(void){
+	systickMsIRQ++;
+}
 
  int main(){
 	 	StartSystick();
