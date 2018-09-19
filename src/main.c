@@ -13,12 +13,14 @@
 #include "gpio.h"//
 #include "rtc.h"
 #include "__rfm12b.h"
-
+#include "ring_buff.h"
 
 volatile uint8_t rxBuff[1024];
 volatile uint16_t pos;
 volatile bool rx_flag;
 volatile uint32_t systickMsIRQ;
+volatile ringBuff_t ringBuff;
+
 
 
  uint32_t GetTickCount(void){
@@ -28,7 +30,8 @@ volatile uint32_t systickMsIRQ;
 
 volatile rfm12bObj_t rfm12bObj;
 
-uint8_t client_rec(uint8_t * buf, uint8_t buf_len);
+
+uint8_t client_rec(void * context, uint8_t * buf, uint8_t buf_len);
 
 int mqtt_message_cb(struct _MqttClient *client, MqttMessage *message, byte msg_new, byte msg_done){
 	return 1;
@@ -40,8 +43,8 @@ int mqt_net_connect_cb (void *context, const char* host, word16 port, int timeou
 
 int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
 	uint32_t enterTimestamp = GetTickCount();
-	while (GetTickCount() - enterTimestamp  > timeout_ms){
-		uint8_t rxNb = client_rec(buf, buf_len);
+	while (GetTickCount() - enterTimestamp < timeout_ms){
+		uint8_t rxNb = RingBufferRead(&ringBuff, (uint8_t *)buf, buf_len);
 		if (rxNb >0){
 			return rxNb;
 		}
@@ -63,14 +66,35 @@ int mqtt_net_disconnect_cb(void *context){
 
 
 
-uint8_t client_rec(uint8_t * buf, uint8_t buf_len){
-	uint8_t byteNb = rfm12bObj.completedRxBuff.dataNb;
+
+uint8_t radio_receive (rfm12bObj_t* rfm12b, ringBuff_t * ringBuff){
+	uint8_t byteNb = rfm12b->completedRxBuff.dataNb;
 	if (byteNb > 0){
-		byteNb = (byteNb < buf_len) ? byteNb : buf_len;
-		memcpy (buf, rfm12bObj.completedRxBuff.data, byteNb);
+		byteNb = (byteNb < R_BUFF_SIZE) ? byteNb : R_BUFF_SIZE;
+		RingBufferWrite(ringBuff,  &rfm12b->completedRxBuff.data, byteNb);
 	}
+	rfm12b->completedRxBuff.dataNb = 0;
 	return byteNb;
 }
+
+
+
+//
+//
+//
+//uint8_t client_rec(void * context, uint8_t * buf, uint8_t buf_len){
+//	rfm12bObj_t * obj = (rfm12bObj_t*) context;
+//	uint8_t byteNb = rfm12bObj.completedRxBuff.dataNb;
+//	if (byteNb > 0){
+//		byteNb = (byteNb < buf_len) ? byteNb : buf_len;
+//		memcpy (buf, obj->completedRxBuff.data, byteNb);
+//	}
+//	obj->completedRxBuff.dataNb = 0;
+//	return byteNb;
+//}
+
+
+
 
 
 void  gpio_init(void){
@@ -91,22 +115,6 @@ void  gpio_init(void){
 
 
 
-#define RFM12_STATUS_RGIT 	0x8000
-#define RFM12_STATUS_FFIT 	0x8000
-#define RFM12_STATUS_POR 	0x4000
-#define RFM12_STATUS_RGUR 	0x2000
-#define RFM12_STATUS_FFOV 	0x2000
-#define RFM12_STATUS_WKUP 	0x1000
-#define RFM12_STATUS_EXT 	0x0800
-#define RFM12_STATUS_LBD 	0x0400
-#define RFM12_STATUS_FFEM 	0x0200
-#define RFM12_STATUS_ATS 	0x0100
-#define RFM12_STATUS_RSSI 	0x0100
-#define RFM12_STATUS_DQD 	0x0080
-#define RFM12_STATUS_CRL 	0x0040
-#define RFM12_STATUS_ATGL	 0x0020
-
-
 
 //
 //void _delay_ms(int n) {
@@ -124,6 +132,7 @@ void  gpio_init(void){
 void EXTI9_5_IRQHandler (void){
 	EXTI_ClearITPendingBit(EXTI_Line5);
 	Rfm12bIrqCallback(&rfm12bObj);
+	radio_receive (&rfm12bObj, &ringBuff);
 
 }
 
@@ -219,13 +228,14 @@ void SysTick_Handler(void){
 	 		MqttClient_Subscribe(&client, &subscribe);
 
 
-
-
-
+	 		RingBufferInit(&ringBuff);
 
 
 
 	 	while (1){
+
+
+	 		 radio_receive (&rfm12bObj, &ringBuff);
 
 	 		if (!(GPIOB->IDR & (1<<11))){
 	 			uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
@@ -236,35 +246,3 @@ void SysTick_Handler(void){
  }
 
 
-
-
- //https://github.com/das-labor/librfm12/blob/master/src/rfm12.c
-
-//	 	Rfm12bTest();
-//	 	Rfm12bRx();
-//
-//
-//	 RTC_Init();
-//	 RtcClear();
-//	 internalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataInt_t));
-//	 externalMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
-//	 logMsgQueue = xQueueCreate(OUTPUT_QUEUE_SIZE, sizeof(msgDataExt_t));
-//
-//	 //	xTaskCreate( ThreadLightSensor, "ThreadLigtSensor", 256, NULL, tskIDLE_PRIORITY + 1, NULL);
-//	 	xTaskCreate( ThreadSupervisor, "Supervisor", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-//	 	xTaskCreate( ThreadCommunication, "Communication", 2048, NULL, tskIDLE_PRIORITY + 1, NULL);
-//		xTaskCreate( ThreadServiceMode, "ServiceMode", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-//	 	vTaskStartScheduler();
-//
-
-
-
-
-
-
-
-
-// }
-//
-//
-//
