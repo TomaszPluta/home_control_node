@@ -179,6 +179,8 @@ void SysTick_Handler(void){
 	 	NVIC_EnableIRQ(EXTI9_5_IRQn);
 	 	Rrm12bObjInit (&rfm12bObj);
 
+ 		RingBufferInit(&ringBuff);
+
 	 	RTC_Init();
 	 	RtcClear();
 
@@ -224,11 +226,11 @@ void SysTick_Handler(void){
 	 		uint8_t topic_count = 2;
 	 		subscribe.topic_count = topic_count;
 	 		subscribe.topics = topics;
-
+	 		subscribe.stat = MQTT_MSG_BEGIN;
 	 		MqttClient_Subscribe(&client, &subscribe);
 
 
-	 		RingBufferInit(&ringBuff);
+
 
 
 

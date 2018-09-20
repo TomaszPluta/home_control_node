@@ -10,7 +10,7 @@
 
 
 void RingBufferInit (volatile ringBuff_t * ringBuff){
-	memset(&ringBuff, 0, sizeof(ringBuff_t));
+	memset(ringBuff, 0, sizeof(ringBuff_t));
 }
 
 
