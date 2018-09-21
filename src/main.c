@@ -76,8 +76,8 @@ uint8_t radio_receive (rfm12bObj_t* rfm12b, ringBuff_t * ringBuff){
 		if (byteNb > 0){
 			byteNb = (byteNb < R_BUFF_SIZE) ? byteNb : R_BUFF_SIZE;
 			RingBufferWrite(ringBuff,  &rfm12b->completedRxBuff.data, byteNb);
+			rfm12b->completedRxBuff.dataNb = 0;
 		}
-		rfm12b->completedRxBuff.dataNb = 0;
 	return byteNb;
 }
 
@@ -235,6 +235,9 @@ void SysTick_Handler(void){
 	 		subscribe.stat = MQTT_MSG_BEGIN;
 	 		MqttClient_Subscribe(&client, &subscribe);
 
+
+
+	 		//ACK not readed as not proper
 
 
 
