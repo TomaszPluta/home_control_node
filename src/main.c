@@ -22,6 +22,8 @@ volatile uint32_t systickMsIRQ;
 volatile ringBuff_t ringBuff;
 
 
+#define BROKER_ADDR		(1)
+#define NODE_ADDR		(2)
 
  uint32_t GetTickCount(void){
 	 return systickMsIRQ;
@@ -55,9 +57,10 @@ int mqtt_net_read_cb(void *context, byte* buf, int buf_len, int timeout_ms){
 int mqtt_net_write_cb(void *context, const byte* buff, int buffLen, int timeout_ms){
 
 	rfm12bObj_t * obj = (rfm12bObj_t*) context;
-	Rfm12bStartSending(obj, (uint8_t *)buff, buffLen);
+	Rfm12bStartSending(obj, (uint8_t *)buff, buffLen, BROKER_ADDR);
 	return buffLen;
 }
+
 
 int mqtt_net_disconnect_cb(void *context){
 	return 0;
@@ -66,16 +69,19 @@ int mqtt_net_disconnect_cb(void *context){
 
 
 
-
 uint8_t radio_receive (rfm12bObj_t* rfm12b, ringBuff_t * ringBuff){
-	uint8_t byteNb = rfm12b->completedRxBuff.dataNb;
-	if (byteNb > 0){
-		byteNb = (byteNb < R_BUFF_SIZE) ? byteNb : R_BUFF_SIZE;
-		RingBufferWrite(ringBuff,  &rfm12b->completedRxBuff.data, byteNb);
-	}
-	rfm12b->completedRxBuff.dataNb = 0;
+	//here check if address we receive is our address and check who send this message
+	uint8_t byteNb = 0;
+		byteNb = rfm12b->completedRxBuff.dataNb;
+		if (byteNb > 0){
+			byteNb = (byteNb < R_BUFF_SIZE) ? byteNb : R_BUFF_SIZE;
+			RingBufferWrite(ringBuff,  &rfm12b->completedRxBuff.data, byteNb);
+		}
+		rfm12b->completedRxBuff.dataNb = 0;
 	return byteNb;
 }
+
+
 
 
 
@@ -177,7 +183,7 @@ void SysTick_Handler(void){
 	 	rfm12bFifoReset();
 	 	rfm12bSwitchRx();
 	 	NVIC_EnableIRQ(EXTI9_5_IRQn);
-	 	Rrm12bObjInit (&rfm12bObj);
+	 	Rrm12bObjInit (&rfm12bObj, NODE_ADDR);
 
  		RingBufferInit(&ringBuff);
 
@@ -241,7 +247,7 @@ void SysTick_Handler(void){
 
 	 		if (!(GPIOB->IDR & (1<<11))){
 	 			uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
-	 			Rfm12bStartSending(&rfm12bObj, buff, 30);
+	 			Rfm12bStartSending(&rfm12bObj, buff, 30, BROKER_ADDR);
 	 			_delay_ms(250);
 	 		}
 	 	}
