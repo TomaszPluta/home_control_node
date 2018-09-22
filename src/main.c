@@ -237,11 +237,13 @@ void SysTick_Handler(void){
 
 
 
-	 		//ACK not readed as not proper
 
 
 
 
+
+
+	 	//brakuje jednego znaku przy wysylaniu
 
 	 	while (1){
 
@@ -249,7 +251,7 @@ void SysTick_Handler(void){
 	 		 radio_receive (&rfm12bObj, &ringBuff);
 
 	 		if (!(GPIOB->IDR & (1<<11))){
-	 			uint8_t buff[] = "helloWorld1helloWorld2helloWorld3";
+	 			uint8_t buff[] = "abcdefghijabcdefghijabcdefghij";
 	 			Rfm12bStartSending(&rfm12bObj, buff, 30, BROKER_ADDR);
 	 			_delay_ms(250);
 	 		}
